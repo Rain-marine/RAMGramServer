@@ -19,7 +19,7 @@ public class UserController implements Repository {
     }
 
     public void blockUser(long userToBlockId) {
-        User loggedUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
+        User loggedUser = USER_REPOSITORY.getById(((ClientHandler)Thread.currentThread()).getLoggedUser().getId());
         User userToBlock = USER_REPOSITORY.getById(userToBlockId);
         for (User user : loggedUser.getFollowers())
             if(user.getUsername().equals(userToBlock.getUsername())) {
