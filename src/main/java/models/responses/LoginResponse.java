@@ -23,7 +23,6 @@ public class LoginResponse implements Response{
 
     @Override
     public void unleash() {
-        System.out.println("response unleashed");
     }
 
     public boolean isLoginValid() {

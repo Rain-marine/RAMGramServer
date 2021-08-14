@@ -39,9 +39,7 @@ public class ClientHandler extends Thread{
         while (!killed){
             try {
                 Request request = objectMapper.readValue(scanner.nextLine(), Request.class);
-                System.out.println("request gotten");
                 Response response = request.execute(this);
-                System.out.println(response);
                 response.unleash();
                 printWriter.println(objectMapper.writeValueAsString(response));
             } catch (IOException e) {
