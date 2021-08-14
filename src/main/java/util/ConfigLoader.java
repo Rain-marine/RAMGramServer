@@ -60,6 +60,19 @@ public class ConfigLoader {
         return "404 : property not found";
     }
 
+    public static String readNetworkProperty(String property){
+        String networkConfigFilePath = readConfigURL("networkConfig");
+        try {
+            assert networkConfigFilePath != null;
+            InputStream inputStream = new FileInputStream(networkConfigFilePath);
+            prop.load(inputStream);
+            return (prop.getProperty(property));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "404 : property not found";
+    }
+
 
     public static void writeProperty(String key , String value,String comment){
         try {

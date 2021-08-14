@@ -1,5 +1,6 @@
 package controllers.converters;
 
+import controllers.Controllers;
 import models.Tweet;
 import models.User;
 import models.trimmed.TrimmedTweet;
@@ -7,7 +8,7 @@ import repository.Repository;
 
 import java.util.ArrayList;
 
-public class TweetConverter implements Converter<TrimmedTweet> , Repository {
+public class TweetConverter implements Converter<TrimmedTweet>, Repository, Controllers {
 
     private long tweetId;
 
@@ -19,10 +20,6 @@ public class TweetConverter implements Converter<TrimmedTweet> , Repository {
     @Override
     public TrimmedTweet convert() {
         Tweet mainTweet = TWEET_REPOSITORY.getById(tweetId);
-        ArrayList<String> likedUsers = new ArrayList<>();
-        for (User user : mainTweet.getUsersWhoLiked()) {
-            likedUsers.add(user.getUsername());
-        }
-        return new TrimmedTweet(mainTweet.getText() , mainTweet.getUser().getUsername() , likedUsers );
+        return new TrimmedTweet(tweetId);
     }
 }

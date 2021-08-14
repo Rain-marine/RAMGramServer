@@ -1,6 +1,9 @@
 package controllers;
 
+import models.ServerMain;
 import models.User;
+import models.requests.Request;
+import models.responses.Response;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
@@ -12,6 +15,7 @@ public class ClientHandler extends Thread{
 
     private User loggedUser;
     private final Socket socket;
+    private boolean killed;
     public PrintWriter printWriter;
     public Scanner scanner;
     public final ObjectMapper objectMapper;
@@ -20,6 +24,7 @@ public class ClientHandler extends Thread{
     public ClientHandler(Socket socket) {
         this.socket = socket;
         this.objectMapper = new ObjectMapper();
+        this.killed = false;
         try {
             this.scanner = new Scanner(socket.getInputStream());
             this.printWriter = new PrintWriter(socket.getOutputStream(), true);
@@ -31,7 +36,18 @@ public class ClientHandler extends Thread{
 
     @Override
     public void run() {
-        super.run();
+        while (!killed){
+            try {
+                Request request = objectMapper.readValue(scanner.nextLine(), Request.class);
+                System.out.println("request gotten");
+                Response response = request.execute(this);
+                System.out.println(response);
+                response.unleash();
+                printWriter.println(objectMapper.writeValueAsString(response));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public User getLoggedUser() {
@@ -42,7 +58,11 @@ public class ClientHandler extends Thread{
         this.loggedUser = loggedUser;
     }
 
-    public Socket getSocket() {
-        return socket;
+    public boolean isKilled() {
+        return killed;
+    }
+
+    public void setKilled(boolean killed) {
+        this.killed = killed;
     }
 }

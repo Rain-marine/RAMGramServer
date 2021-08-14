@@ -1,6 +1,7 @@
 package gui.controllers.welcome;
 
 import controllers.AuthController;
+import controllers.ClientHandler;
 import exceptions.InvalidInputException;
 import gui.controllers.SceneLoader;
 import javafx.event.ActionEvent;
@@ -14,6 +15,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import models.User;
+import models.trimmed.TrimmedLoggedUser;
 import util.ConfigLoader;
 
 public class LoginGuiController {
@@ -40,7 +42,7 @@ public class LoginGuiController {
             errorMessage.setText("Enter Your Password");
         else {
             try {
-                User user = authController.login(username, password);
+                TrimmedLoggedUser user = new TrimmedLoggedUser(Long.parseLong(authController.login(username, password , (ClientHandler) Thread.currentThread()).get(1)));
                 if(user.isActive()) {
                     SceneLoader.getInstance().mainMenu(actionEvent);
                 }

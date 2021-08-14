@@ -9,7 +9,7 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
         include = JsonTypeInfo.As.PROPERTY,
         property = "model")
 @JsonSubTypes({
-//        @JsonSubTypes.Type(value = Login_SignUp_Request.class, name = "login"),
+        @JsonSubTypes.Type(value = LoginResponse.class, name = "login"),
 })
 
 public interface Response {

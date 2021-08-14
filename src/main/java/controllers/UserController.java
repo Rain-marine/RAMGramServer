@@ -130,4 +130,20 @@ public class UserController implements Repository {
     public String UserFullName(long userId) {
         return USER_REPOSITORY.getById(userId).getFullName();
     }
+
+    public String getEmail(long userId) {
+        return USER_REPOSITORY.getById(userId).getEmail();
+    }
+
+    public String getPhoneNumber(long userId) {
+        return USER_REPOSITORY.getById(userId).getPhoneNumber();
+    }
+
+    public Date getBirthday(long userId) {
+        return USER_REPOSITORY.getById(userId).getBirthday();
+    }
+
+    public boolean getActive(long userId) {
+        return  USER_REPOSITORY.getById(userId).isActive();
+    }
 }

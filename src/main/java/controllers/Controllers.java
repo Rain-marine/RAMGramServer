@@ -8,4 +8,5 @@ public interface Controllers {
     FactionsController FACTIONS_CONTROLLER = new FactionsController();
     MessageController MESSAGE_CONTROLLER = new MessageController();
     ChatController CHAT_CONTROLLER = new ChatController();
+    AuthController AUTH_CONTROLLER = new AuthController();
 }
