@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import models.LoggedUser;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class ExplorerGuiController implements Initializable, Controllers {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        listOfTweets = TWEET_CONTROLLER.getTopTweets();
+        listOfTweets = TWEET_CONTROLLER.getTopTweets(LoggedUser.getLoggedUser().getId());
         VBox list = new VBox(0);
         for (Long tweet : listOfTweets) {
             list.getChildren().add(new TweetCard(tweet, TweetCard.MODE.EXPLORER).getVBox());

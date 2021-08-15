@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import models.LoggedUser;
 import util.ConfigLoader;
 
 import javax.naming.SizeLimitExceededException;
@@ -111,7 +112,7 @@ public class TweetCard implements Controllers {
         save.setStyle("-fx-background-color: #690081");
         save.setTextFill(Color.LEMONCHIFFON);
         save.setOnAction(event -> {
-            TWEET_CONTROLLER.saveTweet(tweetId);
+            TWEET_CONTROLLER.saveTweet(tweetId , LoggedUser.getLoggedUser().getId());
             AlertBox.display("done!", "tweet saved");
         });
 
@@ -178,7 +179,7 @@ public class TweetCard implements Controllers {
             retweet.setStyle("-fx-background-color: #690081");
             retweet.setTextFill(Color.LEMONCHIFFON);
             retweet.setOnAction(event -> {
-                TWEET_CONTROLLER.retweet(tweetId);
+                TWEET_CONTROLLER.retweet(tweetId , LoggedUser.getLoggedUser().getId());
                 AlertBox.display("done!", "retweeted!");
             });
 
@@ -186,7 +187,7 @@ public class TweetCard implements Controllers {
             block.setStyle("-fx-background-color: #690081");
             block.setTextFill(Color.LEMONCHIFFON);
             block.setOnAction(event -> {
-                USER_CONTROLLER.blockUser(writeId);
+                USER_CONTROLLER.blockUser(writeId , LoggedUser.getLoggedUser().getId());
                 AlertBox.display("done!", "user blocked");
             });
 
@@ -194,7 +195,7 @@ public class TweetCard implements Controllers {
             mute.setStyle("-fx-background-color: #690081");
             mute.setTextFill(Color.LEMONCHIFFON);
             mute.setOnAction(event -> {
-                USER_CONTROLLER.muteUser(writeId);
+                USER_CONTROLLER.muteUser(writeId , LoggedUser.getLoggedUser().getId());
                 AlertBox.display("done!", "user muted!");
             });
 
@@ -202,7 +203,7 @@ public class TweetCard implements Controllers {
             report.setStyle("-fx-background-color: #690081");
             report.setTextFill(Color.LEMONCHIFFON);
             report.setOnAction(event -> {
-                boolean isDeleted = TWEET_CONTROLLER.reportSpam(tweetId);
+                boolean isDeleted = TWEET_CONTROLLER.reportSpam(tweetId , LoggedUser.getLoggedUser().getId());
                 if (isDeleted) {
                     AlertBox.display("refresh", "you need to refresh the page");
                 } else {
@@ -216,7 +217,7 @@ public class TweetCard implements Controllers {
             like.setTextFill(Color.LEMONCHIFFON);
             like.setOnAction(event -> {
                 if (!isLiked) {
-                    TWEET_CONTROLLER.like(tweetId);
+                    TWEET_CONTROLLER.like(tweetId , LoggedUser.getLoggedUser().getId());
                     like.setText("liked");
                     updateLikedList();
                 }

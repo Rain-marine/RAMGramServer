@@ -214,6 +214,7 @@ public class TweetRepository {
             object.setUsersWhoReported(new ArrayList<>());
             object.setUsersRetweeted(new ArrayList<>());
             object.setUsersWhoLiked(new ArrayList<>());
+
             em.persist(object);
             et.commit();
         } catch (Exception e) {

@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import models.LoggedUser;
 
 public class PasswordConfirmBox implements ConfirmBox {
     static boolean answer;
@@ -38,7 +39,7 @@ public class PasswordConfirmBox implements ConfirmBox {
 
         ConfirmButton.setOnAction(e -> {
             String password = passwordField.getText();
-            if(!password.equals("") && SETTING_CONTROLLER.isPasswordCorrect(password)){
+            if(!password.equals("") && SETTING_CONTROLLER.isPasswordCorrect(password , LoggedUser.getLoggedUser().getId())){
                 answer = true;
                 window.close();
             }

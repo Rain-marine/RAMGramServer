@@ -13,12 +13,13 @@ import java.util.Scanner;
 
 public class ClientHandler extends Thread{
 
-    private User loggedUser;
+    private long loggedUserId;
     private final Socket socket;
     private boolean killed;
     public PrintWriter printWriter;
     public Scanner scanner;
     public final ObjectMapper objectMapper;
+    private String token;
 
 
     public ClientHandler(Socket socket) {
@@ -48,12 +49,12 @@ public class ClientHandler extends Thread{
         }
     }
 
-    public User getLoggedUser() {
-        return loggedUser;
+    public long getLoggedUserId() {
+        return loggedUserId;
     }
 
-    public void setLoggedUser(User loggedUser) {
-        this.loggedUser = loggedUser;
+    public void setLoggedUserId(long loggedUserId) {
+        this.loggedUserId = loggedUserId;
     }
 
     public boolean isKilled() {
@@ -62,5 +63,17 @@ public class ClientHandler extends Thread{
 
     public void setKilled(boolean killed) {
         this.killed = killed;
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

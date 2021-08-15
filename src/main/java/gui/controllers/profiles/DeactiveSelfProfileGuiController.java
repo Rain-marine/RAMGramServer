@@ -8,7 +8,7 @@ import models.LoggedUser;
 public class DeactiveSelfProfileGuiController implements Controllers {
 
     public void activateButtonClicked(ActionEvent actionEvent) {
-        SETTING_CONTROLLER.activateAccount(LoggedUser.getLoggedUser().getUsername());
+        SETTING_CONTROLLER.activateAccount(LoggedUser.getLoggedUser().getId());
         SceneLoader.getInstance().mainMenu(actionEvent);
     }
 

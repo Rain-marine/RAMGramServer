@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import models.LoggedUser;
 
 import java.util.ArrayList;
 
@@ -20,7 +21,7 @@ public class TimeLineGuiController implements Controllers {
 
     public void initialize() {
         VBox list = new VBox(0);
-        listOfTweets = TWEET_CONTROLLER.getFollowingTweets();
+        listOfTweets = TWEET_CONTROLLER.getFollowingTweets(LoggedUser.getLoggedUser().getId());
         for (long tweet : listOfTweets) {
             list.getChildren().add(new TweetCard(tweet , TweetCard.MODE.TIMELINE).getVBox());
         }

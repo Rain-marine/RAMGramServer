@@ -7,6 +7,8 @@ import java.util.Date;
 
 public class TrimmedLoggedUser implements Controllers {
 
+    private long id;
+    private String lastSeenStatus;
     private boolean isPublic;
     private boolean isActive;
     private String username;
@@ -21,6 +23,7 @@ public class TrimmedLoggedUser implements Controllers {
     }
 
     public TrimmedLoggedUser(long userId) {
+        id = userId;
         isActive = USER_CONTROLLER.getActive(userId);
         username = USER_CONTROLLER.getUsername(userId);
         fullName = USER_CONTROLLER.UserFullName(userId);
@@ -30,6 +33,7 @@ public class TrimmedLoggedUser implements Controllers {
         birthday = USER_CONTROLLER.getBirthday(userId);
         profilePic = USER_CONTROLLER.getProfilePhoto(userId);
         isPublic = SETTING_CONTROLLER.isAccountPublic(username);
+        lastSeenStatus = SETTING_CONTROLLER.getUserLastSeenStatus(username);
     }
 
     public boolean isActive() {
@@ -102,5 +106,21 @@ public class TrimmedLoggedUser implements Controllers {
 
     public void setPublic(boolean aPublic) {
         isPublic = aPublic;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getLastSeenStatus() {
+        return lastSeenStatus;
+    }
+
+    public void setLastSeenStatus(String lastSeenStatus) {
+        this.lastSeenStatus = lastSeenStatus;
     }
 }

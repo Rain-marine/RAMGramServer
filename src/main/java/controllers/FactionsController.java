@@ -55,8 +55,8 @@ public class FactionsController implements Repository {
         return activeFollowers;
     }
 
-    public List<User> getActiveFollowings() {
-        List<User> followings = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId()).getFollowings();
+    public List<User> getActiveFollowings(long userId) {
+        List<User> followings = USER_REPOSITORY.getById(userId).getFollowings();
         List<User> activeFollowings = new ArrayList<>();
         followings.forEach(following -> {
             if (following.isActive())

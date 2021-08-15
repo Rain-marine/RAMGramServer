@@ -18,20 +18,20 @@ public class UserController implements Repository {
         REGISTER_MANAGER = new RegisterManager();
     }
 
-    public void blockUser(long userToBlockId) {
-        User loggedUser = USER_REPOSITORY.getById(((ClientHandler)Thread.currentThread()).getLoggedUser().getId());
+    public void blockUser(long userToBlockId , long loggedUserId) {
+        User loggedUser = USER_REPOSITORY.getById(loggedUserId);
         User userToBlock = USER_REPOSITORY.getById(userToBlockId);
         for (User user : loggedUser.getFollowers())
             if(user.getUsername().equals(userToBlock.getUsername())) {
                 NOTIFICATION_REPOSITORY.removeFromFollowers(loggedUser.getId(), user.getId());
                 break;
             }
-        for (User user : USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId()).getFollowings())
+        for (User user : USER_REPOSITORY.getById(loggedUserId).getFollowings())
             if(user.getUsername().equals(userToBlock.getUsername())) {
-                NOTIFICATION_REPOSITORY.removeFromFollowings(loggedUser.getId(), user.getId());
+                NOTIFICATION_REPOSITORY.removeFromFollowings(loggedUserId, user.getId());
                 break;
             }
-        for (Group group : USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId()).getGroups()) {
+        for (Group group : USER_REPOSITORY.getById(loggedUserId).getGroups()) {
             for (User member : group.getMembers()) {
                 if(member.getUsername().equals(userToBlock.getUsername())) {
                     FACTION_REPOSITORY.removeUserFromGroup(member.getId(), group.getId());
@@ -42,8 +42,8 @@ public class UserController implements Repository {
         FACTION_REPOSITORY.addUserToBlackList(loggedUser.getId(), userToBlock.getId());
     }
 
-    public void muteUser(long userId) {
-        USER_REPOSITORY.mute(LoggedUser.getLoggedUser().getId(), userId);
+    public void muteUser(long userId , long loggedUserId) {
+        USER_REPOSITORY.mute(loggedUserId, userId);
     }
 
     public long getUserByUsername(String usernameToFind) throws NullPointerException {
@@ -76,8 +76,8 @@ public class UserController implements Repository {
         USER_REPOSITORY.changeFullName(LoggedUser.getLoggedUser().getId(), newName);
     }
 
-    public void changeBirthday(Date birthday) {
-        USER_REPOSITORY.changeBirthdayDate(LoggedUser.getLoggedUser().getId(), birthday);
+    public void changeBirthday(Date birthday , long userId) {
+        USER_REPOSITORY.changeBirthdayDate(userId, birthday);
     }
 
     public boolean changeEmail(String newEmail) {

@@ -24,14 +24,14 @@ public class SettingController implements Repository {
         LoggedUser.setLoggedUser(null);
     }
 
-    public void deleteAccount() {
-        USER_REPOSITORY.deleteAccount(LoggedUser.getLoggedUser().getId());
-        log.info("account deleted: " + LoggedUser.getLoggedUser().getUsername());
+    public void deleteAccount(long userId) {
+        USER_REPOSITORY.deleteAccount(userId);
+        log.info("account deleted ");
         LoggedUser.setLoggedUser(null);
     }
 
-    public boolean isPasswordCorrect(String password) {
-        return USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId()).getPassword().equals(password);
+    public boolean isPasswordCorrect(String password , long userId) {
+        return USER_REPOSITORY.getById(userId).getPassword().equals(password);
     }
 
     public boolean isAccountPublic(String username) {
@@ -39,13 +39,13 @@ public class SettingController implements Repository {
         return user.isPublic();
     }
 
-    public void changeAccountVisibility(boolean newVisibility) {
-        USER_REPOSITORY.changeAccountVisibility(LoggedUser.getLoggedUser().getId(), newVisibility);
+    public void changeAccountVisibility(boolean newVisibility , long userId) {
+        USER_REPOSITORY.changeAccountVisibility(userId, newVisibility);
     }
 
-    public void deActiveAccount() {
-        USER_REPOSITORY.deactivateAccount(LoggedUser.getLoggedUser().getId());
-        log.info(LoggedUser.getLoggedUser().getUsername() + " account deActivated");
+    public void deActiveAccount(long userId) {
+        USER_REPOSITORY.deactivateAccount(userId);
+        log.info(userId + " account deActivated");
         logout();
     }
 
@@ -54,13 +54,13 @@ public class SettingController implements Repository {
         return user.getLastSeenStatus();
     }
 
-    public void changeLastSeenStatus(String newStatus) {
-        USER_REPOSITORY.changeLastSeenStatus(LoggedUser.getLoggedUser().getId(), newStatus);
-        log.info("lastseen status for " + LoggedUser.getLoggedUser().getUsername() + " was changed to " + newStatus);
+    public void changeLastSeenStatus(String newStatus , long userId) {
+        USER_REPOSITORY.changeLastSeenStatus(userId, newStatus);
+        log.info("last seen status for " + userId + " was changed to " + newStatus);
     }
 
-    public void changePassword(String newPassword) {
-        USER_REPOSITORY.changePassword(LoggedUser.getLoggedUser().getId(), newPassword);
+    public void changePassword(String newPassword , long userId) {
+        USER_REPOSITORY.changePassword(userId, newPassword);
     }
 
     public String lastSeenForLoggedUser(long rawUserId) {
@@ -191,9 +191,9 @@ public class SettingController implements Repository {
         USER_REPOSITORY.changeBirthdayStatus(LoggedUser.getLoggedUser().getId(), status);
     }
 
-    public void activateAccount(String username) {
-        User deActiveUser = USER_REPOSITORY.getByUsername(username);
+    public void activateAccount(long userId) {
+        User deActiveUser = USER_REPOSITORY.getById(userId);
         USER_REPOSITORY.activateAccount(deActiveUser.getId());
-        log.info(username + " account activated");
+        log.info(userId + " account activated");
     }
 }

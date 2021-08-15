@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
+import models.LoggedUser;
 import util.ConfigLoader;
 
 import java.net.URL;
@@ -69,7 +70,7 @@ public class PrivateProfileGuiController implements Initializable, Controllers {
     }
 
     public void blockButtonClicked(ActionEvent actionEvent) {
-        USER_CONTROLLER.blockUser(userId);
+        USER_CONTROLLER.blockUser(userId , LoggedUser.getLoggedUser().getId());
         BlockedProfileGuiController.setUser(userId);
         BlockedProfileGuiController.setPrevious(previous);
         SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("blockedProf"),actionEvent);

@@ -1,7 +1,5 @@
 package models;
 
-import javafx.scene.image.Image;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -71,8 +69,6 @@ public class Tweet {
         this.text = text;
         this.image = image;
     }
-
-
 
 
     public long getId() {

@@ -58,7 +58,7 @@ public class SettingGuiController implements Initializable, Controllers {
     public void deActiveButtonClicked(ActionEvent actionEvent) {
         boolean answer = SimpleConfirmBox.display("deactivation","Are you sure you want to deActivate your account?");
         if(answer){
-            SETTING_CONTROLLER.deActiveAccount();
+            SETTING_CONTROLLER.deActiveAccount(LoggedUser.getLoggedUser().getId());
             SceneLoader.getInstance().noConfirmLogout(actionEvent);
         }
     }
@@ -73,7 +73,7 @@ public class SettingGuiController implements Initializable, Controllers {
     public void changeBDButtonClicked(ActionEvent actionEvent) {
         String birthday = datePicker.getValue() == null ? "" : datePicker.getValue().toString() ;
         if(!birthday.equals("")) {
-            USER_CONTROLLER.changeBirthday(DateFormat.stringToDate(birthday));
+            USER_CONTROLLER.changeBirthday(DateFormat.stringToDate(birthday ), LoggedUser.getLoggedUser().getId());
         }
     }
 
@@ -82,7 +82,7 @@ public class SettingGuiController implements Initializable, Controllers {
         if(answer){
             boolean result = PasswordConfirmBox.display();
             if(result){
-                SETTING_CONTROLLER.deleteAccount();
+                SETTING_CONTROLLER.deleteAccount(LoggedUser.getLoggedUser().getId());
                 SceneLoader.getInstance().noConfirmLogout(actionEvent);
             }
         }
@@ -95,7 +95,7 @@ public class SettingGuiController implements Initializable, Controllers {
 
     public void publicButtonClicked(ActionEvent actionEvent) {
         if(!isPublic){
-            SETTING_CONTROLLER.changeAccountVisibility(true);
+            SETTING_CONTROLLER.changeAccountVisibility(true, LoggedUser.getLoggedUser().getId());
             privateButton.setStyle("-fx-background-color: #717171;");
             publicButton.setStyle("-fx-background-color: #D7A4FF;");
             isPublic = true;
@@ -105,7 +105,7 @@ public class SettingGuiController implements Initializable, Controllers {
 
     public void privateButtonClicked(ActionEvent actionEvent) {
         if(isPublic){
-            SETTING_CONTROLLER.changeAccountVisibility(false);
+            SETTING_CONTROLLER.changeAccountVisibility(false , LoggedUser.getLoggedUser().getId());
             publicButton.setStyle("-fx-background-color: #717171;");
             privateButton.setStyle("-fx-background-color: #D7A4FF;");
             isPublic = false;

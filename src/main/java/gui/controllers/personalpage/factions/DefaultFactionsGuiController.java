@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import models.LoggedUser;
 import models.User;
 import util.ConfigLoader;
 
@@ -37,7 +38,7 @@ public class DefaultFactionsGuiController implements Initializable, Controllers 
                 factionID = -1;
             }
             case FOLLOWING -> {
-                members = FACTIONS_CONTROLLER.getActiveFollowings();
+                members = FACTIONS_CONTROLLER.getActiveFollowings(LoggedUser.getLoggedUser().getId());
                 factionID = -2;
             }
             case BLACKLIST -> {members = FACTIONS_CONTROLLER.getActiveBlockedUsers();

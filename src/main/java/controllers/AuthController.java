@@ -29,7 +29,7 @@ public class AuthController implements Repository {
                 throw new InvalidInputException("Wrong password");
             }
             else {
-                clientHandler.setLoggedUser(user);
+                clientHandler.setLoggedUserId(user.getId());
                 String token = generateToken();
                 ServerMain.addOnlineUser(token , user.getId());
                 log.info(username + " logged in");
