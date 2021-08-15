@@ -155,7 +155,7 @@ public class TweetCard implements Controllers {
         addComment.setOnAction(event -> {
             String commentTextString = commentText.getText();
             if(!commentTextString.equals("")){
-                TWEET_CONTROLLER.addComment(commentTextString , commentImageArray == null ? null :commentImageArray , tweetId);
+                TWEET_CONTROLLER.addComment(commentTextString , commentImageArray == null ? null :commentImageArray , tweetId , LoggedUser.getLoggedUser().getId());
             }
         });
         commentImage.setStyle("-fx-background-color: #690081");

@@ -25,7 +25,7 @@ public class UserRepository {
         }
     }
 
-    public void insert(User user){
+    public synchronized void insert(User user){
         EntityManager em = EntityManagerProvider.getEntityManager();
         EntityTransaction et = null;
         try {

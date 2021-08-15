@@ -109,9 +109,9 @@ public class TweetController implements Repository {
         return false;
     }
 
-    public void addComment(String comment,byte[] image , long rawParentTweetId) {
+    public void addComment(String comment,byte[] image , long rawParentTweetId , long loggedUserId) {
         Tweet parentTweet = TWEET_REPOSITORY.getById(rawParentTweetId);
-        Tweet commentTweet = new Tweet(USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId()),comment, image);
+        Tweet commentTweet = new Tweet(USER_REPOSITORY.getById(loggedUserId),comment, image);
         TWEET_REPOSITORY.addComment(parentTweet,commentTweet);
     }
 

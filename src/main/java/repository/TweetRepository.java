@@ -14,7 +14,7 @@ import java.util.List;
 
 public class TweetRepository {
 
-    public void insert(Tweet tweet){
+    public synchronized void insert(Tweet tweet){
         EntityManager em = EntityManagerProvider.getEntityManager();
         EntityTransaction et = null;
         try {
@@ -33,7 +33,7 @@ public class TweetRepository {
         }
     }
 
-    public void like(long userId , long tweetId){
+    public synchronized void like(long userId , long tweetId){
         EntityManager em = EntityManagerProvider.getEntityManager();
         EntityTransaction et = null;
         try {
@@ -132,7 +132,7 @@ public class TweetRepository {
         }
     }
 
-    public void addComment(Tweet parentTweet, Tweet commentTweet) {
+    public synchronized void addComment(Tweet parentTweet, Tweet commentTweet) {
         EntityManager em = EntityManagerProvider.getEntityManager();
         EntityTransaction et = null;
         try {

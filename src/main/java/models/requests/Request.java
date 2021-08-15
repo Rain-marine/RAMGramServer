@@ -25,7 +25,7 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
         @JsonSubTypes.Type(value = ListRequest.class, name = "list"),
         @JsonSubTypes.Type(value = TweetActionRequest.class, name = "tweetAction"),
         @JsonSubTypes.Type(value = UserActionRequest.class, name = "userAction"),
-//        @JsonSubTypes.Type(value = LoginRequest.class, name = "login"),
+        @JsonSubTypes.Type(value = AddCommentRequest.class, name = "addComment"),
 //        @JsonSubTypes.Type(value = LoginRequest.class, name = "login"),
 //        @JsonSubTypes.Type(value = LoginRequest.class, name = "login"),
 //        @JsonSubTypes.Type(value = LoginRequest.class, name = "login"),
