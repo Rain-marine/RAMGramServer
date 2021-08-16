@@ -13,6 +13,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import gui.controllers.popups.messaging.AddMemberToGroupChat;
+import models.LoggedUser;
+
 import javax.naming.SizeLimitExceededException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -37,8 +39,8 @@ public class GroupChatShowerGuiController implements Initializable, Controllers 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        CHAT_CONTROLLER.seeChat(groupId);
-        groupNameLabel.setText(CHAT_CONTROLLER.getChatName(groupId));
+        CHAT_CONTROLLER.seeChat(groupId , LoggedUser.getLoggedUser().getId());
+        groupNameLabel.setText(CHAT_CONTROLLER.getChatName(groupId , LoggedUser.getLoggedUser().getId()));
         ArrayList<String> membersNames = CHAT_CONTROLLER.getMembersNames(groupId);
         membersLabel.setText(String.join("\n" , membersNames));
         loadMessages();
@@ -70,7 +72,7 @@ public class GroupChatShowerGuiController implements Initializable, Controllers 
     }
 
     private void loadMessages() {
-        groupNameLabel.setText(CHAT_CONTROLLER.getChatName(groupId));
+        groupNameLabel.setText(CHAT_CONTROLLER.getChatName(groupId , LoggedUser.getLoggedUser().getId()));
         VBox list = new VBox(5);
         ArrayList<Long> messageIDs = CHAT_CONTROLLER.getMessages(groupId);
         for (Long messageID : messageIDs) {

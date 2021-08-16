@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import models.LoggedUser;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class SavedTweetsShowerGuiController implements Initializable, Controller
 
     private void loadMessages() {
         VBox list = new VBox(0);
-        ArrayList<Long> tweetIDs = MESSAGE_CONTROLLER.getSavedTweets();
+        ArrayList<Long> tweetIDs = MESSAGE_CONTROLLER.getSavedTweets(LoggedUser.getLoggedUser().getId());
         for (Long tweetId : tweetIDs) {
             list.getChildren().add(new TweetCard(tweetId , TweetCard.MODE.PROFILE).getVBox());
         }

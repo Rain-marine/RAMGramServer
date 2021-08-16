@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import models.LoggedUser;
 import util.ConfigLoader;
 
 import java.net.URL;
@@ -28,7 +29,7 @@ public class MessagesMenuGuiController implements Initializable, Controllers {
 
     private void loadChats() {
         ChatShowerGuiController.setPreviousMenu(ChatShowerGuiController.PREVIOUS.DEFAULT);
-        List<Long> chatIds = CHAT_CONTROLLER.getChatsIds();
+        List<Long> chatIds = CHAT_CONTROLLER.getChatsIds(LoggedUser.getLoggedUser().getId());
         if (chatIds.size() == 0){
             chatsArea.setContent(new Label("you have no chats"));
         }

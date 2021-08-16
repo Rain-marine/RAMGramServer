@@ -63,9 +63,8 @@ public class SettingController implements Repository {
         USER_REPOSITORY.changePassword(userId, newPassword);
     }
 
-    public String lastSeenForLoggedUser(long rawUserId) {
+    public String lastSeenForLoggedUser(long rawUserId , long loggedUserId) {
         User user = USER_REPOSITORY.getById(rawUserId);
-        long loggedUserId = LoggedUser.getLoggedUser().getId();
         String status = USER_REPOSITORY.getById(user.getId()).getLastSeenStatus();
         if (user.getFollowings().stream().noneMatch(it -> it.getId() == loggedUserId)) {
             return ("last seen recently");
@@ -82,12 +81,11 @@ public class SettingController implements Repository {
         return ("last seen recently");
     }
 
-    public String birthdayForLoggedUser(long userId) {
+    public String birthdayForLoggedUser(long userId , long loggedUserId) {
         User user = USER_REPOSITORY.getById(userId);
         User.Level status = user.isBirthDayVisible();
         if (user.getBirthday() != null){
             if (status == User.Level.FOLLOWING) {
-                long loggedUserId = LoggedUser.getLoggedUser().getId();
                 List<User> following = user.getFollowings();
                 for (User followed : following) {
                     if (followed.getId() == loggedUserId) {
@@ -106,11 +104,10 @@ public class SettingController implements Repository {
     }
 
 
-    public String emailForLoggedUser(long userId) {
+    public String emailForLoggedUser(long userId, long loggedUserId) {
         User user = USER_REPOSITORY.getById(userId);
         User.Level status = user.isEmailVisible();
         if (status == User.Level.FOLLOWING) {
-            long loggedUserId = LoggedUser.getLoggedUser().getId();
             List<User> following = user.getFollowings();
             for (User followed : following) {
                 if (followed.getId() == loggedUserId) {
@@ -126,12 +123,11 @@ public class SettingController implements Repository {
 
     }
 
-    public String phoneNumberForLoggedUser(long userId) {
+    public String phoneNumberForLoggedUser(long userId, long loggedUserId) {
         User user = USER_REPOSITORY.getById(userId);
         User.Level status = user.isPhoneNumberVisible();
         if (!user.getPhoneNumber().equals("")){
             if (status == User.Level.FOLLOWING) {
-                long loggedUserId = LoggedUser.getLoggedUser().getId();
                 List<User> following = user.getFollowings();
                 for (User followed : following) {
                     if (followed.getId() == loggedUserId) {

@@ -3,8 +3,9 @@ package models.trimmed;
 import controllers.Controllers;
 
 public class TrimmedUser implements Controllers {
+    private long loggedUserId;
     private long userId;
-    private String lastSeen ;
+    private String lastSeen;
     private String phoneNumber;
     private String email;
     private String birthday;
@@ -12,10 +13,10 @@ public class TrimmedUser implements Controllers {
 
 
     public TrimmedUser(long userId) {
-        lastSeen = SETTING_CONTROLLER.lastSeenForLoggedUser(userId);
-        phoneNumber = SETTING_CONTROLLER.phoneNumberForLoggedUser(userId);
-        email = SETTING_CONTROLLER.emailForLoggedUser(userId);
-        birthday = SETTING_CONTROLLER.birthdayForLoggedUser(userId);
+        lastSeen = SETTING_CONTROLLER.lastSeenForLoggedUser(userId, loggedUserId);
+        phoneNumber = SETTING_CONTROLLER.phoneNumberForLoggedUser(userId, loggedUserId);
+        email = SETTING_CONTROLLER.emailForLoggedUser(userId, loggedUserId);
+        birthday = SETTING_CONTROLLER.birthdayForLoggedUser(userId, loggedUserId);
         bio = USER_CONTROLLER.getUserBio(userId);
     }
 }

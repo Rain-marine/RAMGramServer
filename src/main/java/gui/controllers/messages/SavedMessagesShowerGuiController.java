@@ -12,6 +12,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import models.LoggedUser;
 
 import javax.naming.SizeLimitExceededException;
 import java.net.URL;
@@ -40,7 +41,7 @@ public class SavedMessagesShowerGuiController implements Initializable, Controll
 
     private void loadMessages() {
         VBox list = new VBox(0);
-        ArrayList<Long> messageIDs = MESSAGE_CONTROLLER.getSavedMessage();
+        ArrayList<Long> messageIDs = MESSAGE_CONTROLLER.getSavedMessage(LoggedUser.getLoggedUser().getId());
         for (Long messageID : messageIDs) {
             list.getChildren().add(new MessageCard(messageID).getCard());
         }

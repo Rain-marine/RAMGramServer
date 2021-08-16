@@ -14,6 +14,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import models.LoggedUser;
 
 import javax.naming.SizeLimitExceededException;
 import java.net.URL;
@@ -49,15 +50,15 @@ public class ChatShowerGuiController implements Initializable, Controllers {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        CHAT_CONTROLLER.seeChat(chatId);
+        CHAT_CONTROLLER.seeChat(chatId , LoggedUser.getLoggedUser().getId());
         loadMessages();
     }
 
     private void loadMessages() {
-        long frontUserID = CHAT_CONTROLLER.getFrontUserId(chatId);
+        long frontUserID = CHAT_CONTROLLER.getFrontUserId(chatId , LoggedUser.getLoggedUser().getId());
         usernameLabel.setText(USER_CONTROLLER.getUsername(frontUserID));
         profileImageview.setImage(ImageController.byteArrayToImage(USER_CONTROLLER.getProfilePhoto(frontUserID)));
-        lastSeenLabel.setText(SETTING_CONTROLLER.lastSeenForLoggedUser(frontUserID));
+        lastSeenLabel.setText(SETTING_CONTROLLER.lastSeenForLoggedUser(frontUserID, LoggedUser.getLoggedUser().getId()));
 
         VBox list = new VBox(5);
         ArrayList<Long> messageIDs = CHAT_CONTROLLER.getMessages(chatId);
@@ -96,7 +97,7 @@ public class ChatShowerGuiController implements Initializable, Controllers {
             AlertBox.display("Nerd Alert" , "write something idiot");
         }
         else {
-            CHAT_CONTROLLER.addMessageToChat(chatId,messageText , chosenImageByteArray );
+            CHAT_CONTROLLER.addMessageToChat(chatId,messageText , chosenImageByteArray , LoggedUser.getLoggedUser().getId());
             chosenImageView.setImage(null);
             messageTextField.clear();
             loadMessages();

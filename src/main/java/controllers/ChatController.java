@@ -16,22 +16,22 @@ public class ChatController implements Repository {
     public ChatController() {
     }
 
-    public List<Long> getChatsIds() {
-        List<Chat> chats = CHAT_REPOSITORY.getAllChats(LoggedUser.getLoggedUser().getId());
-        List<Long> chatIds = new ArrayList<>();
+    public ArrayList<Long> getChatsIds(long userId) {
+        List<Chat> chats = CHAT_REPOSITORY.getAllChats(userId);
+        ArrayList<Long> chatIds = new ArrayList<>();
         for (Chat chat : chats) {
             chatIds.add(chat.getId());
         }
         return chatIds;
     }
 
-    public void seeChat(long chatId) {
-        log.info("the chat " + chatId + " was seen by :" + LoggedUser.getLoggedUser().getUsername());
-        CHAT_REPOSITORY.clearUnSeenCount(chatId, LoggedUser.getLoggedUser().getId());
+    public void seeChat(long chatId , long loggedUserId) {
+        log.info("the chat " + chatId + " was seen by :" + loggedUserId);
+        CHAT_REPOSITORY.clearUnSeenCount(chatId, loggedUserId);
     }
 
-    public void addMessageToChat(long chatId, String message, byte[] images) {
-        long frontUserId = getFrontUserId(chatId);
+    public void addMessageToChat(long chatId, String message, byte[] images , long loggedUserId) {
+        long frontUserId = getFrontUserId(chatId , loggedUserId);
         Message newMessage = new Message(message, images,
                 USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId()),
                 USER_REPOSITORY.getById(frontUserId));
@@ -39,14 +39,14 @@ public class ChatController implements Repository {
         log.info(LoggedUser.getLoggedUser().getUsername() + " sent message to " + chatId);
     }
 
-    public long getFrontUserId(long chatId) {
-        User frontUser = getFrontUser(chatId);
+    public long getFrontUserId(long chatId , long loggedUserId) {
+        User frontUser = getFrontUser(chatId , loggedUserId);
         return frontUser.getId();
     }
 
-    private User getFrontUser(long chatId) {
+    private User getFrontUser(long chatId , long loggedUserId) {
         Chat chat = CHAT_REPOSITORY.getById(chatId);
-        User frontUser = chat.getUserChats().get(0).getUser().getUsername().equals(LoggedUser.getLoggedUser().getUsername())
+        User frontUser = chat.getUserChats().get(0).getUser().getId() == loggedUserId
                 ? chat.getUserChats().get(1).getUser()
                 : chat.getUserChats().get(0).getUser();
         return frontUser;
@@ -82,18 +82,18 @@ public class ChatController implements Repository {
         CHAT_REPOSITORY.addMessageToChat(chatId, newMessage);
     }
 
-    public String getChatName(Long chatId) {
+    public String getChatName(Long chatId , long loggedUserId) {
         Chat chat = CHAT_REPOSITORY.getById(chatId);
         if (chat.isGroup()) {
             return chat.getName();
         } else {
-            return getFrontUser(chatId).getUsername();
+            return getFrontUser(chatId, loggedUserId).getUsername();
         }
     }
 
-    public String getUnseenCount(Long chatId) {
+    public String getUnseenCount(Long chatId , long loggedUserId) {
         Chat chat = CHAT_REPOSITORY.getById(chatId);
-        UserChat userToSee = chat.getUserChats().stream().filter(it -> it.getUser().getId() == LoggedUser.getLoggedUser().getId()).findAny().orElseThrow();
+        UserChat userToSee = chat.getUserChats().stream().filter(it -> it.getUser().getId() == loggedUserId).findAny().orElseThrow();
         return String.valueOf(userToSee.getUnseenCount());
     }
 

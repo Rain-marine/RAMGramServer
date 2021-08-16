@@ -1,14 +1,15 @@
 package gui.controllers;
 
 import controllers.Controllers;
+import models.LoggedUser;
 
 public class InfoLoader implements Controllers {
 
     public static String load(long userId){
-        String lastSeen = SETTING_CONTROLLER.lastSeenForLoggedUser(userId);
-        String phoneNumber = SETTING_CONTROLLER.phoneNumberForLoggedUser(userId);
-        String email = SETTING_CONTROLLER.emailForLoggedUser(userId);
-        String birthday = SETTING_CONTROLLER.birthdayForLoggedUser(userId);
+        String lastSeen = SETTING_CONTROLLER.lastSeenForLoggedUser(userId , LoggedUser.getLoggedUser().getId());
+        String phoneNumber = SETTING_CONTROLLER.phoneNumberForLoggedUser(userId, LoggedUser.getLoggedUser().getId());
+        String email = SETTING_CONTROLLER.emailForLoggedUser(userId, LoggedUser.getLoggedUser().getId());
+        String birthday = SETTING_CONTROLLER.birthdayForLoggedUser(userId, LoggedUser.getLoggedUser().getId());
         String bio = USER_CONTROLLER.getUserBio(userId);
 
         String infoText = USER_CONTROLLER.getUsername(userId) + "'s Profile" +

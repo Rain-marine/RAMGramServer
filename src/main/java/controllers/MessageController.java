@@ -15,7 +15,7 @@ public class MessageController implements Repository{
     public MessageController() {
     }
 
-    public ArrayList<Long> getSavedMessage() {
+    public ArrayList<Long> getSavedMessage(long userId) {
         User user = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
         List<Message> messages = user.getFavoriteMessages();
         ArrayList<Long> messageIDs = new ArrayList<>();
@@ -26,8 +26,8 @@ public class MessageController implements Repository{
         return messageIDs;
     }
 
-    public ArrayList<Long> getSavedTweets() {
-        User user = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
+    public ArrayList<Long> getSavedTweets(long userId) {
+        User user = USER_REPOSITORY.getById(userId);
         List<Tweet> tweets = user.getFavoriteTweets();
         ArrayList<Long> tweetIDs = new ArrayList<>();
         for (Tweet tweet : tweets) {

@@ -2,6 +2,7 @@ package models.requests;
 
 
 import controllers.ClientHandler;
+import models.responses.ChatResponse;
 import models.responses.Response;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
@@ -26,8 +27,10 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
         @JsonSubTypes.Type(value = TweetActionRequest.class, name = "tweetAction"),
         @JsonSubTypes.Type(value = UserActionRequest.class, name = "userAction"),
         @JsonSubTypes.Type(value = AddCommentRequest.class, name = "addComment"),
-//        @JsonSubTypes.Type(value = LoginRequest.class, name = "login"),
-//        @JsonSubTypes.Type(value = LoginRequest.class, name = "login"),
+        @JsonSubTypes.Type(value = MessageRequest.class, name = "message"),
+        @JsonSubTypes.Type(value = ChatInfoRequest.class, name = "chatInfo"),
+        @JsonSubTypes.Type(value = ChatRequest.class, name = "chat"),
+
 //        @JsonSubTypes.Type(value = LoginRequest.class, name = "login"),
 //        @JsonSubTypes.Type(value = LoginRequest.class, name = "login"),
 //        @JsonSubTypes.Type(value = LoginRequest.class, name = "login"),

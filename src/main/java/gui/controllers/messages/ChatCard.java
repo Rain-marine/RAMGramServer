@@ -8,6 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import models.LoggedUser;
 import util.ConfigLoader;
 
 public class ChatCard implements Controllers {
@@ -21,11 +22,11 @@ public class ChatCard implements Controllers {
         this.card = new VBox(5);
         this.isGroup = CHAT_CONTROLLER.isGroup(chatId);
 
-        Label name = new Label(CHAT_CONTROLLER.getChatName(chatId));
+        Label name = new Label(CHAT_CONTROLLER.getChatName(chatId , LoggedUser.getLoggedUser().getId()));
         name.setFont(Font.font(14));
         name.setTextFill(Color.INDIGO);
 
-        Label unseenCountLabel = new Label(CHAT_CONTROLLER.getUnseenCount(chatId));
+        Label unseenCountLabel = new Label(CHAT_CONTROLLER.getUnseenCount(chatId , LoggedUser.getLoggedUser().getId()));
         unseenCountLabel.setFont(Font.font(11));
         unseenCountLabel.setTextFill(Color.MEDIUMVIOLETRED);
 

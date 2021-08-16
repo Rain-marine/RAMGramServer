@@ -1,33 +1,34 @@
 package models.requests;
 
 import controllers.ClientHandler;
-import controllers.Controllers;
 import models.responses.BooleanResponse;
+import models.responses.ChatResponse;
+import models.responses.MessageResponse;
 import models.responses.Response;
-import models.responses.TweetResponse;
-import models.trimmed.TrimmedTweet;
+import models.trimmed.TrimmedChat;
+import models.trimmed.TrimmedMessage;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
-@JsonTypeName("tweet")
-public class TweetRequest implements Request, Controllers {
+@JsonTypeName("chat")
+public class ChatRequest implements Request{
 
     private String token;
     private long userId;
-    private long tweetId;
+    private long chatId;
 
-    public TweetRequest() {
-    }
-
-    public TweetRequest(String token, long userId, long tweetId) {
+    public ChatRequest(String token, long userId, long chatId) {
         this.token = token;
         this.userId = userId;
-        this.tweetId = tweetId;
+        this.chatId = chatId;
+    }
+
+    public ChatRequest() {
     }
 
     @Override
     public Response execute(ClientHandler clientHandler) {
         if(clientHandler.getToken().equals(token)){
-            return new TweetResponse(new TrimmedTweet(tweetId));
+            return new ChatResponse(new TrimmedChat(chatId , userId));
         }
         else
             return new BooleanResponse(false);
@@ -50,11 +51,11 @@ public class TweetRequest implements Request, Controllers {
         this.userId = userId;
     }
 
-    public long getTweetId() {
-        return tweetId;
+    public long getChatId() {
+        return chatId;
     }
 
-    public void setTweetId(long tweetId) {
-        this.tweetId = tweetId;
+    public void setChatId(long chatId) {
+        this.chatId = chatId;
     }
 }

@@ -5,14 +5,12 @@ import controllers.Controllers;
 import models.responses.BooleanResponse;
 import models.responses.ListResponse;
 import models.responses.Response;
-import models.responses.TweetResponse;
-import models.trimmed.TrimmedTweet;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("list")
 public class ListRequest implements Request, Controllers {
 
-    public enum TYPE {TIMELINE, EXPLORER , COMMENT ,CHAT ,MESSAGE , NOTIFICATION ,FACTION}
+    public enum TYPE {TIMELINE, EXPLORER , COMMENT ,CHAT ,MESSAGE , NOTIFICATION ,FACTION , SAVED_MESSAGES , SAVED_TWEET}
 
     private String token;
     private long userId;
@@ -39,6 +37,22 @@ public class ListRequest implements Request, Controllers {
                 }
                 case EXPLORER -> {
                    return new ListResponse(TWEET_CONTROLLER.getTopTweets(userId));
+                }
+                case CHAT -> {
+                    return new ListResponse(CHAT_CONTROLLER.getChatsIds(userId));
+                }
+                case SAVED_TWEET -> {
+                    return new ListResponse(MESSAGE_CONTROLLER.getSavedTweets(userId));
+                }
+                case SAVED_MESSAGES -> {
+                    return new ListResponse(MESSAGE_CONTROLLER.getSavedMessage(userId));
+                }
+                case COMMENT -> {
+                    return new ListResponse(TWEET_CONTROLLER.getTweetComments(superId));
+                }
+                case MESSAGE -> {
+                    CHAT_CONTROLLER.seeChat(superId , userId);
+                    return new ListResponse(CHAT_CONTROLLER.getMessages(superId));
                 }
                 default -> {
                     return new BooleanResponse(false);
