@@ -28,7 +28,7 @@ public class MessageRequest implements Request{
     @Override
     public Response execute(ClientHandler clientHandler) {
         if(clientHandler.getToken().equals(token)){
-            return new MessageResponse(new TrimmedMessage(messageId));
+            return new MessageResponse(new TrimmedMessage(messageId , userId));
         }
         else
             return new BooleanResponse(false);

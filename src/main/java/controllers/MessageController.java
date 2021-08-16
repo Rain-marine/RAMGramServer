@@ -283,11 +283,11 @@ public class MessageController implements Repository{
 
     public enum TYPE {EDIT, DELETE, BOTH, NONE}
 
-    public TYPE getMessageType(long messageId) {
+    public TYPE getMessageType(long messageId , long loggedUserId) {
         Message message = MESSAGE_REPOSITORY.getById(messageId);
         boolean editable = (message.getSender().getId() == message.getGrandSender().getId()
-                && message.getSender().getId() == LoggedUser.getLoggedUser().getId());
-        boolean removable = (message.getSender().getId() == LoggedUser.getLoggedUser().getId());
+                && message.getSender().getId() == loggedUserId);
+        boolean removable = (message.getSender().getId() == loggedUserId);
         if (editable && removable) {
             return TYPE.BOTH;
         } else if (editable) {

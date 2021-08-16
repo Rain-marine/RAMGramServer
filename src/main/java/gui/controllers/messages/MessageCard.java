@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import models.LoggedUser;
 
 import java.util.ArrayList;
 
@@ -71,7 +72,7 @@ public class MessageCard implements Controllers {
 
         String sender = MESSAGE_CONTROLLER.getMessageSender(messageId);
         String grandSender = MESSAGE_CONTROLLER.getMessageGrandSender(messageId);
-        this.type = MESSAGE_CONTROLLER.getMessageType(messageId);
+        this.type = MESSAGE_CONTROLLER.getMessageType(messageId , LoggedUser.getLoggedUser().getId());
 
         profilePhoto = new ImageView();
         profilePhoto.setFitHeight(30);

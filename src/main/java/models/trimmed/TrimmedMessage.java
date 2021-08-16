@@ -18,7 +18,7 @@ public class TrimmedMessage implements Controllers {
     public TrimmedMessage() {
     }
 
-    public TrimmedMessage(long id) {
+    public TrimmedMessage(long id , long loggedUserId) {
         this.messageId = id;
         this.messageText = MESSAGE_CONTROLLER.getMessageText(messageId);
         this.messageDate = MESSAGE_CONTROLLER.getMessageDate(messageId);
@@ -26,7 +26,7 @@ public class TrimmedMessage implements Controllers {
         this.profileImageArray = MESSAGE_CONTROLLER.getSenderProfile(messageId);
         this.sender = MESSAGE_CONTROLLER.getMessageSender(messageId);
         this.grandSender = MESSAGE_CONTROLLER.getMessageGrandSender(messageId);
-        this.type = MESSAGE_CONTROLLER.getMessageType(messageId);
+        this.type = MESSAGE_CONTROLLER.getMessageType(messageId , loggedUserId);
 
     }
 
