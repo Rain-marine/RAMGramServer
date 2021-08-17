@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import models.LoggedUser;
 
 public class AddMemberToGroupChat implements Controllers , ConfirmBox {
 
@@ -45,8 +46,7 @@ public class AddMemberToGroupChat implements Controllers , ConfirmBox {
         addUserButton.setOnAction(e -> {
             String username = memberNameTextField.getText();
             if(!username.equals("")){
-                if (MESSAGE_CONTROLLER.canSendMessageToUser(username)) {
-                    CHAT_CONTROLLER.addMemberToGroupChat(username , chatId);
+                if (MESSAGE_CONTROLLER.canSendMessageToUser(username , LoggedUser.getLoggedUser().getId())) {
                     answer = true;
                     window.close();
                 }

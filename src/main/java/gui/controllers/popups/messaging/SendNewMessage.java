@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import models.LoggedUser;
 
 import javax.naming.SizeLimitExceededException;
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class SendNewMessage implements ConfirmBox, Controllers {
         addFactionButton.setOnAction(e -> {
             String factionName = faction.getText();
             if(!factionName.equals("")){
-                if (!MESSAGE_CONTROLLER.canSendMessageToGroup(factionName)) {
+                if (!MESSAGE_CONTROLLER.canSendMessageToGroup(factionName , LoggedUser.getLoggedUser().getId())) {
                     factionError.setText("Can't message " + factionName);
                     faction.setText("");
                 }
@@ -85,7 +86,7 @@ public class SendNewMessage implements ConfirmBox, Controllers {
         addUserButton.setOnAction(e -> {
             String username = receiver.getText();
             if(!username.equals("")){
-                if (!MESSAGE_CONTROLLER.canSendMessageToUser(username)) {
+                if (!MESSAGE_CONTROLLER.canSendMessageToUser(username , LoggedUser.getLoggedUser().getId())) {
                     userError.setText("Can't message " + username );
                     receiver.setText("");
                 }
@@ -128,7 +129,6 @@ public class SendNewMessage implements ConfirmBox, Controllers {
                 sendError.setText("write something idiot");
             }
             else {
-                MESSAGE_CONTROLLER.sendMessage(messageTextString , finalImage[0] , users, factions);
                 answer = true;
                 window.close();
             }

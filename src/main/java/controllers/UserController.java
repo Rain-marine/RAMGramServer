@@ -46,10 +46,10 @@ public class UserController implements Repository {
         USER_REPOSITORY.mute(loggedUserId, userId);
     }
 
-    public long getUserByUsername(String usernameToFind) throws NullPointerException {
+    public long getUserByUsername(String usernameToFind) {
         User user = USER_REPOSITORY.getByUsername(usernameToFind);
         if (user == null){
-            throw new NullPointerException();
+            return 0L;
         }
         return user.getId();
     }

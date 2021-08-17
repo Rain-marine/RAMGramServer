@@ -33,10 +33,10 @@ public class ChatController implements Repository {
     public void addMessageToChat(long chatId, String message, byte[] images , long loggedUserId) {
         long frontUserId = getFrontUserId(chatId , loggedUserId);
         Message newMessage = new Message(message, images,
-                USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId()),
+                USER_REPOSITORY.getById(loggedUserId),
                 USER_REPOSITORY.getById(frontUserId));
         CHAT_REPOSITORY.addMessageToChat(chatId, newMessage);
-        log.info(LoggedUser.getLoggedUser().getUsername() + " sent message to " + chatId);
+        log.info(loggedUserId + " sent message to " + chatId);
     }
 
     public long getFrontUserId(long chatId , long loggedUserId) {
@@ -63,12 +63,12 @@ public class ChatController implements Repository {
         return messageIDs;
     }
 
-    public void createGroupChat(List<String> members, String name) {
-        members.add(LoggedUser.getLoggedUser().getUsername());
+    public void createGroupChat(List<String> members, String name, long loggedUserId) {
+        members.add(USER_REPOSITORY.getById(loggedUserId).getUsername());
         List<User> groupMembers = members.stream().map(USER_REPOSITORY::getByUsername).collect(Collectors.toList());
         Chat chat = new Chat(groupMembers, name);
         CHAT_REPOSITORY.insert(chat);
-        log.info(" group chat " + chat.getId() + " was created by " + LoggedUser.getLoggedUser().getUsername());
+        log.info(" group chat " + chat.getId() + " was created by " + loggedUserId);
     }
 
     public void addMemberToGroupChat(String member, long chatId) {

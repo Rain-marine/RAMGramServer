@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import models.LoggedUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,7 @@ public class NewGroup implements ConfirmBox, Controllers {
         addUserButton.setOnAction(e -> {
             String username = membersTextField.getText();
             if(!username.equals("")){
-                if (!MESSAGE_CONTROLLER.canSendMessageToUser(username)) {
+                if (!MESSAGE_CONTROLLER.canSendMessageToUser(username, LoggedUser.getLoggedUser().getId())) {
                     userError.setText("Can't add " + username + " to group" );
                     membersTextField.setText("");
                 }
@@ -83,7 +84,6 @@ public class NewGroup implements ConfirmBox, Controllers {
                 sendError.setText("choose a name idiot");
             }
             else {
-                CHAT_CONTROLLER.createGroupChat(users,groupName);
                 answer = true;
                 window.close();
             }

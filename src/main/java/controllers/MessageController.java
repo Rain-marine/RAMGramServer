@@ -16,7 +16,7 @@ public class MessageController implements Repository{
     }
 
     public ArrayList<Long> getSavedMessage(long userId) {
-        User user = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
+        User user = USER_REPOSITORY.getById(userId);
         List<Message> messages = user.getFavoriteMessages();
         ArrayList<Long> messageIDs = new ArrayList<>();
         for (Message message : messages) {
@@ -36,33 +36,33 @@ public class MessageController implements Repository{
         return tweetIDs;
     }
 
-    public boolean canSendMessageToUser(String userToSendMessage) {
+    public boolean canSendMessageToUser(String userToSendMessage , long loggedUserId) {
         User user = USER_REPOSITORY.getByUsername(userToSendMessage);
         if (user == null || !user.isActive())
             return false;
-        if (hasFollow(user.getFollowers()))
+        if (hasFollow(user.getFollowers() , loggedUserId))
             return true;
-        return isFollower(user.getFollowings());
+        return isFollower(user.getFollowings() , loggedUserId);
     }
 
-    private boolean isFollower(List<User> followings) {
+    private boolean isFollower(List<User> followings, long loggedUserId) {
         for (User user : followings) {
-            if (user.getUsername().equals(LoggedUser.getLoggedUser().getUsername()))
+            if (user.getId() == loggedUserId)
                 return true;
         }
         return false;
     }
 
-    private boolean hasFollow(List<User> followers) {
+    private boolean hasFollow(List<User> followers , long loggedUserId) {
         for (User user : followers) {
-            if (user.getUsername().equals(LoggedUser.getLoggedUser().getUsername()))
+            if (user.getId() == loggedUserId)
                 return true;
         }
         return false;
     }
 
-    public boolean canSendMessageToGroup(String groupToSendMessage) {
-        User user = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
+    public boolean canSendMessageToGroup(String groupToSendMessage, long loggedUserId) {
+        User user = USER_REPOSITORY.getById(loggedUserId);
         for (Group group : user.getGroups()) {
             if (group.getName().equals(groupToSendMessage))
                 return true;
@@ -70,30 +70,30 @@ public class MessageController implements Repository{
         return false;
     }
 
-    public void sendMessage(String message, byte[] image, List<String> users, List<String> groupsToSendMessage) {
-        User user = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
+    public void sendMessage(String message, byte[] image, List<String> users, List<String> groupsToSendMessage , long loggedUserId) {
+        User user = USER_REPOSITORY.getById(loggedUserId);
         List<Chat> userChats = user.getChats();
         List<Group> groups = user.getGroups();
         HashMap<String, Group> groupNameToGroup = extractGroupNameToGroup(groups);
 
-        sendMessageToUsers(message, image, users, userChats);
-        sendMessageToGroups(message, image, groupsToSendMessage, groupNameToGroup, userChats);
+        sendMessageToUsers(message, image, users, userChats , loggedUserId);
+        sendMessageToGroups(message, image, groupsToSendMessage, groupNameToGroup, userChats , loggedUserId);
     }
 
 
-    private void sendMessageToGroups(String message, byte[] image, List<String> groupsToSendMessage, HashMap<String, Group> groups, List<Chat> chats) {
+    private void sendMessageToGroups(String message, byte[] image, List<String> groupsToSendMessage, HashMap<String, Group> groups, List<Chat> chats, long loggedUserId) {
         for (String groupName : groupsToSendMessage) {
             List<String> users = new ArrayList<>();
             Group faction = FACTION_REPOSITORY.getFactionById(groups.get(groupName).getId());
             faction.getMembers().forEach(member -> users.add(member.getUsername()));
-            sendMessageToUsers(message, image, users, chats);
+            sendMessageToUsers(message, image, users, chats ,loggedUserId );
         }
     }
 
-    private void sendMessageToUsers(String message, byte[] image, List<String> users, List<Chat> chats) {
+    private void sendMessageToUsers(String message, byte[] image, List<String> users, List<Chat> chats , long loggedUserId) {
         for (String user : users) {
             boolean hasSent = false;
-            User loggedUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
+            User loggedUser = USER_REPOSITORY.getById(loggedUserId);
             User receiver = USER_REPOSITORY.getByUsername(user);
             Message newMessage = new Message(message, image, loggedUser, receiver);
             for (Chat chat : chats) {
@@ -113,7 +113,7 @@ public class MessageController implements Repository{
                     }
                 });
                 CHAT_REPOSITORY.insert(newChat);
-                Chat chat = getChatWithId(receiver.getId());
+                Chat chat = getChatWithId(receiver.getId() , loggedUserId);
                 CHAT_REPOSITORY.addMessageToChat(chat.getId(), newMessage);
             }
         }
@@ -130,10 +130,10 @@ public class MessageController implements Repository{
         return groupNameToGroup;
     }
 
-    public void forwardTweet(long tweetId , String receiver) {
+    public void forwardTweet(long tweetId , String receiver, long loggedUserId) {
         Tweet tweet = TWEET_REPOSITORY.getById(tweetId);
         String message = "Tweet forwarded from " + tweet.getUser().getUsername() + "\n" + tweet.getText();
-        User loggedUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
+        User loggedUser = USER_REPOSITORY.getById(loggedUserId);
         User receiveUser = USER_REPOSITORY.getByUsername(receiver);
         Message newMessage = new Message(message, tweet.getImage(), loggedUser, receiveUser);
         newMessage.setGrandSender(tweet.getUser());
@@ -162,8 +162,8 @@ public class MessageController implements Repository{
         CHAT_REPOSITORY.insert(newChat);
     }
 
-    public Chat getChatWithId(long userId) {
-        User loggedUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
+    public Chat getChatWithId(long userId , long loggedUserId) {
+        User loggedUser = USER_REPOSITORY.getById(loggedUserId);
         User receiveUser = USER_REPOSITORY.getById(userId);
         String username = receiveUser.getUsername();
         for (Chat chat : loggedUser.getChats()) {
@@ -217,30 +217,30 @@ public class MessageController implements Repository{
         return MESSAGE_REPOSITORY.getById(messageId).getSender().getProfilePhoto();
     }
 
-    public void forward(long messageID, List<String> users, List<String> factions) {
-        User user = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
+    public void forward(long messageID, List<String> users, List<String> factions , long loggedUserId) {
+        User user = USER_REPOSITORY.getById(loggedUserId);
         List<Chat> userChats = user.getChats();
         List<Group> groups = user.getGroups();
         HashMap<String, Group> groupNameToGroup = extractGroupNameToGroup(groups);
 
-        forwardMessageToUsers(messageID, users, userChats);
-        forwardMessageToFactions(messageID, factions, groupNameToGroup, userChats);
+        forwardMessageToUsers(messageID, users, userChats , loggedUserId);
+        forwardMessageToFactions(messageID, factions, groupNameToGroup, userChats , loggedUserId);
     }
 
-    private void forwardMessageToFactions(long messageID, List<String> factions, HashMap<String, Group> groupNameToGroup, List<Chat> chats) {
+    private void forwardMessageToFactions(long messageID, List<String> factions, HashMap<String, Group> groupNameToGroup, List<Chat> chats , long loggedUserId) {
         for (String groupName : factions) {
             List<String> users = new ArrayList<>();
             Group faction = FACTION_REPOSITORY.getFactionById(groupNameToGroup.get(groupName).getId());
             faction.getMembers().forEach(member -> users.add(member.getUsername()));
-            forwardMessageToUsers(messageID, users, chats);
+            forwardMessageToUsers(messageID, users, chats , loggedUserId);
         }
     }
 
-    private void forwardMessageToUsers(long messageID, List<String> users, List<Chat> chats) {
+    private void forwardMessageToUsers(long messageID, List<String> users, List<Chat> chats , long loggedUserId) {
         Message message = MESSAGE_REPOSITORY.getById(messageID);
         for (String user : users) {
             boolean hasSent = false;
-            User loggedUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
+            User loggedUser = USER_REPOSITORY.getById(loggedUserId);
             User receiver = USER_REPOSITORY.getByUsername(user);
             Message newMessage = new Message(message.getText(), message.getImage(), loggedUser, receiver);
             newMessage.setGrandSender(message.getSender());
@@ -262,7 +262,7 @@ public class MessageController implements Repository{
                     }
                 });
                 CHAT_REPOSITORY.insert(newChat);
-                Chat chat = getChatWithId(receiver.getId());
+                Chat chat = getChatWithId(receiver.getId() , loggedUserId);
                 CHAT_REPOSITORY.addMessageToChat(chat.getId(), newMessage);
             }
         }
@@ -273,10 +273,10 @@ public class MessageController implements Repository{
         MESSAGE_REPOSITORY.addMessageToSavedMessage(loggedUserId, message);
     }
 
-    public long getChatWithUser(long userId) {
-        Chat chat = getChatWithId(userId);
+    public long getChatWithUser(long userId , long loggedUserId) {
+        Chat chat = getChatWithId(userId , loggedUserId);
         if (chat == null)
-            chat = getChatWithId(userId);
+            chat = getChatWithId(userId , loggedUserId);
         return chat.getId();
     }
 

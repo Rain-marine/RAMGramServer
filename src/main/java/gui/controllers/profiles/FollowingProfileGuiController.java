@@ -100,7 +100,6 @@ public class FollowingProfileGuiController implements Initializable, Controllers
     public void messageButtonClicked(ActionEvent actionEvent) {
         ChatShowerGuiController.setProfileAccessController(profileAccessController);
         ChatShowerGuiController.setPreviousMenu(ChatShowerGuiController.PREVIOUS.PROFILE);
-        ChatShowerGuiController.setChatId(MESSAGE_CONTROLLER.getChatWithUser(userId));
         SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("chat"), actionEvent);
     }
 

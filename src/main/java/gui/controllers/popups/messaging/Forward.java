@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import models.LoggedUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +59,7 @@ public class Forward implements ConfirmBox, Controllers {
         addFactionButton.setOnAction(e -> {
             String factionName = faction.getText();
             if(!factionName.equals("")){
-                if (!MESSAGE_CONTROLLER.canSendMessageToGroup(factionName)) {
+                if (!MESSAGE_CONTROLLER.canSendMessageToGroup(factionName , LoggedUser.getLoggedUser().getId())) {
                     factionError.setText("Can't message " + factionName);
                     faction.setText("");
                 }
@@ -75,7 +76,7 @@ public class Forward implements ConfirmBox, Controllers {
         addUserButton.setOnAction(e -> {
             String username = receiver.getText();
             if(!username.equals("")){
-                if (!MESSAGE_CONTROLLER.canSendMessageToUser(username)) {
+                if (!MESSAGE_CONTROLLER.canSendMessageToUser(username , LoggedUser.getLoggedUser().getId())) {
                     factionError.setText("Can't message " + username );
                     receiver.setText("");
                 }
@@ -101,7 +102,6 @@ public class Forward implements ConfirmBox, Controllers {
                 sendError.setText("choose receiver idiot");
             }
             else {
-                MESSAGE_CONTROLLER.forward(messageID , users, factions);
                 answer = true;
                 window.close();
             }

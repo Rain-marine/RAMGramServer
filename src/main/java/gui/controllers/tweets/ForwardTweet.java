@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import models.LoggedUser;
 
 public class ForwardTweet implements ConfirmBox, Controllers {
 
@@ -45,8 +46,7 @@ public class ForwardTweet implements ConfirmBox, Controllers {
         addUserButton.setOnAction(e -> {
             String username = receiverNameTextField.getText();
             if(!username.equals("")){
-                if (MESSAGE_CONTROLLER.canSendMessageToUser(username)) {
-                    MESSAGE_CONTROLLER.forwardTweet(tweetId , username);
+                if (MESSAGE_CONTROLLER.canSendMessageToUser(username, LoggedUser.getLoggedUser().getId())) {
                     answer = true;
                     window.close();
                 }
