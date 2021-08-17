@@ -22,7 +22,7 @@ public class SystemNotificationGuiController implements Initializable, Controlle
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        List<Notification> notifications = NOTIFICATION_CONTROLLER.getSystemNotification();
+        List<Notification> notifications = null;
         if (notifications.size() == 0) {
             Label nothing = new Label("You have no system notification!");
             notifArea.setContent(nothing);
@@ -41,7 +41,6 @@ public class SystemNotificationGuiController implements Initializable, Controlle
                         info.setText(notification.getSender().getUsername() + " rejected your follow request!");
                     }
                 }
-                NOTIFICATION_CONTROLLER.deleteNotification(notification);
                 list.getChildren().add(info);
             }
             notifArea.setContent(list);

@@ -98,8 +98,8 @@ public class UserController implements Repository {
         return false;
     }
 
-    public void unblockUser(long userId) {
-        USER_REPOSITORY.unblock(LoggedUser.getLoggedUser().getId(), userId);
+    public void unblockUser(long userId , long loggedUserId) {
+        USER_REPOSITORY.unblock(loggedUserId, userId);
     }
 
     public boolean isAccountPublic(String username) {

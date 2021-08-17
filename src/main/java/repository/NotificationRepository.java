@@ -1,12 +1,23 @@
 package repository;
 
 import models.Notification;
+import models.Tweet;
 import models.User;
 import repository.utils.EntityManagerProvider;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
 public class NotificationRepository {
+
+
+    public Notification getById(long notificationId) {
+        EntityManager em = EntityManagerProvider.getEntityManager();
+        try {
+            return em.find(Notification.class , notificationId);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     public void insert(Notification notification) {
         EntityManager em = EntityManagerProvider.getEntityManager();
@@ -136,4 +147,5 @@ public class NotificationRepository {
             em.close();
         }
     }
+
 }

@@ -61,7 +61,6 @@ public class BlockedProfileGuiController implements Initializable , Controllers 
     }
 
     public void unblockButtonClicked(ActionEvent actionEvent) {
-        USER_CONTROLLER.unblockUser(userId);
         ProfileAccessController profileAccessController = new ProfileAccessController(ConfigLoader.getPreviousMenuCode("explorer"), userId,0);
         SceneLoader.getInstance().changeScene(profileAccessController.checkAccessibility(),actionEvent);
     }

@@ -58,7 +58,6 @@ public class PendingRequestProfileGuiController implements Initializable, Contro
 
 
     public void removeReqButtonClicked(ActionEvent actionEvent) {
-        NOTIFICATION_CONTROLLER.deleteRequest(userId);
         PrivateProfileGuiController.setPrevious(previous);
         PrivateProfileGuiController.setUser(userId);
         SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("privateProf"),actionEvent);

@@ -22,7 +22,7 @@ public class MyRequestsGuiController implements Initializable, Controllers {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        List<Notification> notifications = NOTIFICATION_CONTROLLER.getYourFollowingRequestNotification();
+        List<Notification> notifications = null;
         if (notifications.size() == 0) {
             Label nothing = new Label("You haven't sent any new request!");
             notifArea.setContent(nothing);

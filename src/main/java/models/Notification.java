@@ -1,5 +1,8 @@
 package models;
 
+import repository.NotificationRepository;
+import repository.UserRepository;
+
 import javax.persistence.*;
 
 @Entity
@@ -28,9 +31,9 @@ public class Notification {
     public Notification() {
     }
 
-    public Notification(User user, User receiver, NotificationType type){
-        this.sender = user;
-        this.receiver = receiver;
+    public Notification(long userId, long receiverId, NotificationType type){
+        this.sender = new UserRepository().getById(userId);
+        this.receiver = new UserRepository().getById(receiverId);
         this.type = type;
     }
 

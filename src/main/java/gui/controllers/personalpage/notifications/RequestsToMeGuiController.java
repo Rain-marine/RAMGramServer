@@ -29,7 +29,7 @@ public class RequestsToMeGuiController implements Initializable, Controllers {
     }
 
     private void loadNotifications() {
-        List<Notification> followingRequestNotification = NOTIFICATION_CONTROLLER.getFollowingRequestsNotifications();
+        List<Notification> followingRequestNotification = null;
         if (followingRequestNotification.size() == 0) {
             Label nothing = new Label("You have no requests \nCause everybody hates you\nAnd you look like a monkey");
             notifArea.setContent(nothing);
@@ -40,19 +40,16 @@ public class RequestsToMeGuiController implements Initializable, Controllers {
                 Label title = new Label( notification.getSender().getUsername() + " wants to follow you");
                 Button accept = new Button("Accept");
                 accept.setOnAction(event -> {
-                    NOTIFICATION_CONTROLLER.acceptFollowRequest(notification);
                     loadNotifications();
                 });
 
                 Button reject = new Button("Reject Quietly");
                 reject.setOnAction(event -> {
-                    NOTIFICATION_CONTROLLER.rejectFollowRequestWithoutNotification(notification);
                     loadNotifications();
                 });
 
                 Button rejectAndNotify = new Button("Reject & Notify");
                 rejectAndNotify.setOnAction(event -> {
-                    NOTIFICATION_CONTROLLER.rejectFollowRequestWithNotification(notification);
                     loadNotifications();
                 });
 

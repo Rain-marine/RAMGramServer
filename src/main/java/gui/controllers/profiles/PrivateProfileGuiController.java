@@ -58,7 +58,6 @@ public class PrivateProfileGuiController implements Initializable, Controllers {
 
 
     public void followButtonClicked(ActionEvent actionEvent) {
-        NOTIFICATION_CONTROLLER.sendFollowRequestToUser(userId);
         PendingRequestProfileGuiController.setUser(userId);
         PendingRequestProfileGuiController.setPrevious(previous);
         SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("pendingProf"),actionEvent);
