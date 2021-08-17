@@ -23,8 +23,8 @@ public class TweetController implements Repository {
     }
 
 
-    public void addTweet(String text, byte[] image){
-        Tweet tweet = new Tweet(LoggedUser.getLoggedUser(),text, image);
+    public void addTweet(String text, byte[] image , long loggedUserId){
+        Tweet tweet = new Tweet(USER_REPOSITORY.getById(loggedUserId),text, image);
         TWEET_REPOSITORY.insert(tweet);
         log.info("new tweet");
     }

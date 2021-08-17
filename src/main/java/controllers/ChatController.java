@@ -77,8 +77,8 @@ public class ChatController implements Repository {
             CHAT_REPOSITORY.addMemberToGroupChat(chatId, new UserChat(USER_REPOSITORY.getByUsername(member), chat));
     }
 
-    public void addNewMessageToGroupChat(String message, byte[] image, long chatId) {
-        Message newMessage = new Message(message, image, USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId()));
+    public void addNewMessageToGroupChat(String message, byte[] image, long chatId , long loggedUserId) {
+        Message newMessage = new Message(message, image, USER_REPOSITORY.getById(loggedUserId));
         CHAT_REPOSITORY.addMessageToChat(chatId, newMessage);
     }
 
@@ -112,7 +112,7 @@ public class ChatController implements Repository {
         return names;
     }
 
-    public void leaveGroup(long groupId) {
-        CHAT_REPOSITORY.leaveGroup(LoggedUser.getLoggedUser().getId() , groupId);
+    public void leaveGroup(long groupId , long loggedUserId) {
+        CHAT_REPOSITORY.leaveGroup(loggedUserId , groupId);
     }
 }

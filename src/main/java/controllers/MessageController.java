@@ -119,8 +119,8 @@ public class MessageController implements Repository{
         }
     }
 
-    public void insertSavedMessage(long messageId) {
-        MESSAGE_REPOSITORY.addMessageToSavedMessage(LoggedUser.getLoggedUser().getId(), MESSAGE_REPOSITORY.getById(messageId));
+    public void insertSavedMessage(long messageId , long loggedUserId) {
+        MESSAGE_REPOSITORY.addMessageToSavedMessage(loggedUserId, MESSAGE_REPOSITORY.getById(messageId));
     }
 
     private HashMap<String, Group> extractGroupNameToGroup(List<Group> groups) {
@@ -268,9 +268,9 @@ public class MessageController implements Repository{
         }
     }
 
-    public void addSavedMessage(String messageText, byte[] chosenImageByteArray) {
-        Message message = new Message(messageText, chosenImageByteArray, LoggedUser.getLoggedUser());
-        MESSAGE_REPOSITORY.addMessageToSavedMessage(LoggedUser.getLoggedUser().getId(), message);
+    public void addSavedMessage(String messageText, byte[] chosenImageByteArray , long loggedUserId) {
+        Message message = new Message(messageText, chosenImageByteArray, USER_REPOSITORY.getById(loggedUserId));
+        MESSAGE_REPOSITORY.addMessageToSavedMessage(loggedUserId, message);
     }
 
     public long getChatWithUser(long userId) {

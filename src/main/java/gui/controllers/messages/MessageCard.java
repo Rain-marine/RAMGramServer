@@ -145,7 +145,7 @@ public class MessageCard implements Controllers {
         });
 
         save.setOnAction(event -> {
-            MESSAGE_CONTROLLER.insertSavedMessage(Long.parseLong(save.getId()));
+            MESSAGE_CONTROLLER.insertSavedMessage(Long.parseLong(save.getId()), LoggedUser.getLoggedUser().getId());
         });
 
     }

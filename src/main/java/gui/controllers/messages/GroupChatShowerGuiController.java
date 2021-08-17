@@ -64,7 +64,7 @@ public class GroupChatShowerGuiController implements Initializable, Controllers 
             AlertBox.display("Nerd Alert" , "write something idiot");
         }
         else {
-            CHAT_CONTROLLER.addNewMessageToGroupChat(messageText , chosenImageByteArray , groupId );
+            CHAT_CONTROLLER.addNewMessageToGroupChat(messageText , chosenImageByteArray , groupId , LoggedUser.getLoggedUser().getId());
             chosenImageView.setImage(null);
             messageTextField.clear();
             loadMessages();
@@ -99,7 +99,7 @@ public class GroupChatShowerGuiController implements Initializable, Controllers 
     }
 
     public void leaveButtonClicked(ActionEvent actionEvent) {
-        CHAT_CONTROLLER.leaveGroup(groupId);
+        CHAT_CONTROLLER.leaveGroup(groupId , LoggedUser.getLoggedUser().getId());
         SceneLoader.getInstance().messaging(actionEvent);
 
     }

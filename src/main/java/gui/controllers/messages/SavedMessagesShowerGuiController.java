@@ -66,7 +66,7 @@ public class SavedMessagesShowerGuiController implements Initializable, Controll
             AlertBox.display("Nerd Alert" , "write something idiot");
         }
         else {
-            MESSAGE_CONTROLLER.addSavedMessage(messageText , chosenImageByteArray );
+            MESSAGE_CONTROLLER.addSavedMessage(messageText , chosenImageByteArray , LoggedUser.getLoggedUser().getId());
             chosenImageView.setImage(null);
             messageTextField.clear();
             loadMessages();

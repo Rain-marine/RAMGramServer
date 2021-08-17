@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import models.LoggedUser;
 
 import javax.naming.SizeLimitExceededException;
 
@@ -37,7 +38,7 @@ public class NewTweetGuiController implements Controllers {
         if (!tweetText.getText().equals("") || tweetImage != null){
             boolean answer = SimpleConfirmBox.display("confirmation" , "Are you sure?");
             if (answer){
-                TWEET_CONTROLLER.addTweet(tweetText.getText(),tweetImage);
+                TWEET_CONTROLLER.addTweet(tweetText.getText(),tweetImage , LoggedUser.getLoggedUser().getId());
                 AlertBox.display("Done!", "Tweet posted");
                 tweetText.setText("");
             }
