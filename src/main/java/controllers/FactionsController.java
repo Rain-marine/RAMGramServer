@@ -2,12 +2,12 @@ package controllers;
 
 import models.Group;
 import models.User;
-import repository.Repository;
+import repository.Repositories;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FactionsController implements Repository {
+public class FactionsController implements Repositories {
 
     public FactionsController() {
     }

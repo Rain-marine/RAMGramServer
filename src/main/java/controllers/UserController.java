@@ -4,11 +4,11 @@ import models.Group;
 import models.User;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import repository.Repository;
+import repository.Repositories;
 
 import java.util.Date;
 
-public class UserController implements Repository {
+public class UserController implements Repositories {
     final RegisterManager REGISTER_MANAGER ;
     private final static Logger log = LogManager.getLogger(UserController.class);
 

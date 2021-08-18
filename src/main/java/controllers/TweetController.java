@@ -4,14 +4,14 @@ import models.Tweet;
 import models.User;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import repository.Repository;
+import repository.Repositories;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TweetController implements Repository {
+public class TweetController implements Repositories {
     private final static Logger log = LogManager.getLogger(TweetController.class);
 
 

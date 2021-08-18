@@ -1,14 +1,12 @@
 package models.trimmed;
 
 import controllers.Controllers;
-import models.Tweet;
-import org.codehaus.jackson.annotate.JsonTypeInfo;
-import repository.Repository;
+import repository.Repositories;
 
 import java.util.ArrayList;
 
 
-public class TrimmedTweet implements Repository, Controllers {
+public class TrimmedTweet implements Repositories, Controllers {
 
     private long Id;
     private long writerId;

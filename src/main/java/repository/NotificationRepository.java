@@ -19,7 +19,7 @@ public class NotificationRepository {
         }
     }
 
-    public void insert(Notification notification) {
+    public synchronized void insert(Notification notification) {
         EntityManager em = EntityManagerProvider.getEntityManager();
         EntityTransaction et = null;
         try {

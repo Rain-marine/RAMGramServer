@@ -1,9 +1,9 @@
 package models.trimmed;
 
 import models.types.NotificationType;
-import repository.Repository;
+import repository.Repositories;
 
-public class TrimmedNotification implements Repository {
+public class TrimmedNotification implements Repositories {
 
     private long id;
     private String sender;

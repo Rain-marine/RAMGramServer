@@ -4,14 +4,14 @@ import models.*;
 import models.types.NotificationType;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import repository.Repository;
+import repository.Repositories;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class NotificationController implements Repository {
+public class NotificationController implements Repositories {
     private final static Logger log = LogManager.getLogger(NotificationController.class);
 
     public NotificationController() {

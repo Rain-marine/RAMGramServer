@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class MessageRepository {
 
-    public void insert(Message message) {
+    public synchronized void insert(Message message) {
         EntityManager em = EntityManagerProvider.getEntityManager();
         EntityTransaction et = null;
         try {

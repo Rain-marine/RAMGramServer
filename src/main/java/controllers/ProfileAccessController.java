@@ -4,11 +4,11 @@ import models.types.NotificationType;
 import models.User;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import repository.Repository;
+import repository.Repositories;
 
 import java.util.List;
 
-public class ProfileAccessController implements Repository {
+public class ProfileAccessController implements Repositories {
     static Logger log = LogManager.getLogger(ProfileAccessController.class);
 
     private final User loggedUser;

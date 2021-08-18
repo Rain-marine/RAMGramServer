@@ -11,7 +11,7 @@ import javax.persistence.EntityTransaction;
 public class FactionRepository {
     private final static Logger log = LogManager.getLogger(FactionRepository.class);
 
-    public void insert(Group newGroup) {
+    public synchronized void insert(Group newGroup) {
         EntityManager em = EntityManagerProvider.getEntityManager();
         EntityTransaction et = null;
         try {

@@ -2,13 +2,12 @@ package models.trimmed;
 
 import controllers.Controllers;
 import models.User;
-import repository.Repository;
+import repository.Repositories;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TrimmedFaction implements Repository, Controllers {
+public class TrimmedFaction implements Repositories, Controllers {
 
     private int id;
     private long ownerId;

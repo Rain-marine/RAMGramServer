@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MessageController implements Repository{
+public class MessageController implements Repositories {
     private final static Logger log = LogManager.getLogger(MessageController.class);
 
     public MessageController() {

@@ -5,13 +5,13 @@ import models.ServerMain;
 import models.User;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import repository.Repository;
+import repository.Repositories;
 
 import java.util.Date;
 import java.util.List;
 
 
-public class SettingController implements Repository {
+public class SettingController implements Repositories {
     private final static Logger log = LogManager.getLogger(SettingController.class);
 
 

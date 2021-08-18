@@ -5,7 +5,7 @@ import models.ServerMain;
 import models.User;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import repository.Repository;
+import repository.Repositories;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.Base64;
 import java.util.Date;
 
 
-public class AuthController implements Repository {
+public class AuthController implements Repositories {
     private final static Logger log = LogManager.getLogger(AuthController.class);
 
     public ArrayList<String> login(String username, String password, ClientHandler clientHandler) throws InvalidInputException {

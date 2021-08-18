@@ -1,6 +1,6 @@
 package repository;
 
-public interface Repository {
+public interface Repositories {
     UserRepository USER_REPOSITORY = new UserRepository();
     FactionRepository FACTION_REPOSITORY = new FactionRepository();
     NotificationRepository NOTIFICATION_REPOSITORY = new NotificationRepository();

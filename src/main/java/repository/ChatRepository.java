@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ChatRepository {
+
     public List<Chat> getAllChats(long userId) {
         //all userId chat orderBy unSeen message thenOrderBy Date(if is ok, it's not necessary)
         EntityManager em = EntityManagerProvider.getEntityManager();
@@ -37,7 +38,7 @@ public class ChatRepository {
         }
     }
 
-    public void addMessageToChat(long chatId, Message message) {
+    public synchronized void addMessageToChat(long chatId, Message message) {
         //add message to chat
         //set hasSeen to false
         //UnseenCount += 1
@@ -69,7 +70,7 @@ public class ChatRepository {
         }
     }
 
-    public void insert(Chat chat) {
+    public synchronized void insert(Chat chat) {
         EntityManager em = EntityManagerProvider.getEntityManager();
         EntityTransaction et = null;
         try {
@@ -125,7 +126,7 @@ public class ChatRepository {
         }
     }
 
-    public void addMemberToGroupChat(long chatId, UserChat userChat) {
+    public synchronized void addMemberToGroupChat(long chatId, UserChat userChat) {
         //add userChat to chatId chat
         EntityManager em = EntityManagerProvider.getEntityManager();
         EntityTransaction et = null;

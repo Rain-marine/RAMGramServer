@@ -19,6 +19,10 @@ public class ChatInfoResponse implements Response, Controllers {
     public ChatInfoResponse(long chatId , long loggedUserId) {
         this.loggedUserId = loggedUserId;
         this.chatId = chatId;
+    }
+
+    @Override
+    public void unleash() {
         this.frontUsername = CHAT_CONTROLLER.getChatName(chatId , loggedUserId);
         if(CHAT_CONTROLLER.isGroup(chatId)){
             this.membersNames = CHAT_CONTROLLER.getMembersNames(chatId);
@@ -28,12 +32,6 @@ public class ChatInfoResponse implements Response, Controllers {
             this.frontProfile = USER_CONTROLLER.getProfilePhoto(frontUserId);
             this.lastSeen = SETTING_CONTROLLER.lastSeenForLoggedUser(frontUserId , loggedUserId);
         }
-
-    }
-
-    @Override
-    public void unleash() {
-
     }
 
     public ChatInfoResponse() {
