@@ -1,6 +1,6 @@
 package models;
 
-import repository.NotificationRepository;
+import models.types.NotificationType;
 import repository.UserRepository;
 
 import javax.persistence.*;

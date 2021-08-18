@@ -3,7 +3,9 @@ package models.requests;
 import controllers.ClientHandler;
 import controllers.Controllers;
 import models.responses.BooleanResponse;
+import models.responses.ExploreResponse;
 import models.responses.Response;
+import models.types.SendMessageType;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 import java.util.List;
@@ -11,11 +13,9 @@ import java.util.List;
 @JsonTypeName("sendMessage")
 public class SendMessageRequest implements Request, Controllers {
 
-    public enum TYPE {SEND, NEW_GROUP, FORWARD, FORWARD_TWEET, ADD_MEMBER , CHAT}
-
     private String token;
     private long userId;
-    private TYPE type;
+    private SendMessageType type;
     private long contentId;
     private List<String> users;
     private List<String> factions;
@@ -23,7 +23,7 @@ public class SendMessageRequest implements Request, Controllers {
     private byte[] contentImage;
     private String targetUsername;
 
-    public SendMessageRequest(String token, long userId, TYPE type, long contentId, List<String> users, List<String> factions, String content, byte[] contentImage, String targetUsername) {
+    public SendMessageRequest(String token, long userId, SendMessageType type, long contentId, List<String> users, List<String> factions, String content, byte[] contentImage, String targetUsername) {
         this.token = token;
         this.userId = userId;
         this.type = type;
@@ -44,7 +44,9 @@ public class SendMessageRequest implements Request, Controllers {
                 case FORWARD_TWEET -> MESSAGE_CONTROLLER.forwardTweet(contentId,targetUsername, userId);
                 case NEW_GROUP -> CHAT_CONTROLLER.createGroupChat(users,content, userId);
                 case ADD_MEMBER -> CHAT_CONTROLLER.addMemberToGroupChat(targetUsername,contentId);
-                case CHAT -> MESSAGE_CONTROLLER.getChatWithUser(contentId , userId);
+                case CHAT -> {
+                    return new ExploreResponse(MESSAGE_CONTROLLER.getChatWithUser(contentId, userId));
+                }
             }
             return new BooleanResponse(true);
         } else
@@ -70,11 +72,11 @@ public class SendMessageRequest implements Request, Controllers {
         this.userId = userId;
     }
 
-    public TYPE getType() {
+    public SendMessageType getType() {
         return type;
     }
 
-    public void setType(TYPE type) {
+    public void setType(SendMessageType type) {
         this.type = type;
     }
 

@@ -4,6 +4,7 @@ import controllers.ClientHandler;
 import controllers.Controllers;
 import models.responses.BooleanResponse;
 import models.responses.Response;
+import models.types.FactionActionType;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 import java.util.List;
@@ -11,18 +12,16 @@ import java.util.List;
 @JsonTypeName("factionAction")
 public class FactionActionRequest implements Request, Controllers {
 
-    public enum TYPE {DELETE_FACTION, DELETE_MEMBER, NEW_FACTION, ADD_MEMBER}
-
     private String token;
     private long userId;
-    private TYPE type;
+    private FactionActionType type;
     private long otherUserId;
     private int factionId;
     private List<String> users;
     private String name;
 
 
-    public FactionActionRequest(String token, long userId, TYPE type, int factionId, long otherUserId, List<String> users , String name) {
+    public FactionActionRequest(String token, long userId, FactionActionType type, int factionId, long otherUserId, List<String> users , String name) {
         this.token = token;
         this.userId = userId;
         this.type = type;
@@ -65,11 +64,11 @@ public class FactionActionRequest implements Request, Controllers {
         this.userId = userId;
     }
 
-    public TYPE getType() {
+    public FactionActionType getType() {
         return type;
     }
 
-    public void setType(TYPE type) {
+    public void setType(FactionActionType type) {
         this.type = type;
     }
 

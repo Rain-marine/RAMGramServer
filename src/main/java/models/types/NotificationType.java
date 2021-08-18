@@ -1,4 +1,4 @@
-package models;
+package models.types;
 
 public enum NotificationType {
     FOLLOW_REQ_REJECT("Your follow request rejected!"),

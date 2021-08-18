@@ -1,6 +1,6 @@
 package controllers;
 
-import models.NotificationType;
+import models.types.NotificationType;
 import models.User;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
