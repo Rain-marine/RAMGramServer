@@ -1,7 +1,6 @@
 package controllers;
 
 import models.Group;
-import models.LoggedUser;
 import models.User;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -59,40 +58,42 @@ public class UserController implements Repository {
         log.warn(userId + " account was reported");
     }
 
-    public boolean ChangeUsername(String newUsername) {
+    public boolean changeUsername(String newUsername, long loggedUserId) {
         if (REGISTER_MANAGER.isUsernameAvailable(newUsername)) {
-            USER_REPOSITORY.changeUsername(LoggedUser.getLoggedUser().getId(), newUsername);
-            log.info(LoggedUser.getLoggedUser().getId() + " user name was changed to "+ newUsername);
+            USER_REPOSITORY.changeUsername(loggedUserId, newUsername);
+            log.info(loggedUserId + " user name was changed to "+ newUsername);
             return true;
         }
         return false;
     }
 
-    public void changeBio(String newBio) {
-        USER_REPOSITORY.changeBio(LoggedUser.getLoggedUser().getId(), newBio);
+    public boolean changeBio(String newBio , long loggedUserId) {
+        USER_REPOSITORY.changeBio(loggedUserId, newBio);
+        return true;
     }
 
-    public void changeName(String newName) {
-        USER_REPOSITORY.changeFullName(LoggedUser.getLoggedUser().getId(), newName);
+    public boolean changeName(String newName, long loggedUserId) {
+        USER_REPOSITORY.changeFullName(loggedUserId, newName);
+        return true;
     }
 
     public void changeBirthday(Date birthday , long userId) {
         USER_REPOSITORY.changeBirthdayDate(userId, birthday);
     }
 
-    public boolean changeEmail(String newEmail) {
+    public boolean changeEmail(String newEmail, long loggedUserId) {
         if (REGISTER_MANAGER.isEmailAvailable(newEmail)) {
-            USER_REPOSITORY.changeEmail(LoggedUser.getLoggedUser().getId(), newEmail);
-            log.info(LoggedUser.getLoggedUser().getId() + " email name was changed to "+ newEmail);
+            USER_REPOSITORY.changeEmail(loggedUserId, newEmail);
+            log.info(loggedUserId + " email name was changed to "+ newEmail);
 
             return true;
         }
         return false;
     }
 
-    public boolean changeNumber(String newNumber) {
+    public boolean changeNumber(String newNumber , long loggedUserId) {
         if(REGISTER_MANAGER.isPhoneNumberAvailable(newNumber)) {
-            USER_REPOSITORY.changePhoneNumber(LoggedUser.getLoggedUser().getId(), newNumber);
+            USER_REPOSITORY.changePhoneNumber(loggedUserId, newNumber);
             return true;
         }
         return false;
@@ -106,8 +107,9 @@ public class UserController implements Repository {
         return USER_REPOSITORY.getByUsername(username).isPublic();
     }
 
-    public void changeProfilePhoto(byte[] newPhoto){
-        USER_REPOSITORY.changeProfilePhoto(LoggedUser.getLoggedUser().getId(), newPhoto);
+    public boolean changeProfilePhoto(byte[] newPhoto , long loggedUserId){
+        USER_REPOSITORY.changeProfilePhoto(loggedUserId, newPhoto);
+        return true;
     }
 
     public User getById(long id) {

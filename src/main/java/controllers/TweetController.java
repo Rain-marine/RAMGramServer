@@ -1,6 +1,5 @@
 package controllers;
 
-import models.LoggedUser;
 import models.Tweet;
 import models.User;
 import org.apache.log4j.LogManager;
@@ -115,15 +114,6 @@ public class TweetController implements Repository {
         TWEET_REPOSITORY.addComment(parentTweet,commentTweet);
     }
 
-    public boolean isLiked (long tweetId){
-        Tweet completeTweet = TWEET_REPOSITORY.getById(tweetId);
-        for (User user : completeTweet.getUsersWhoLiked()) {
-            if (user.getUsername().equals(LoggedUser.getLoggedUser().getUsername()))
-                return true;
-        }
-        return false;
-
-    }
 
     public boolean like(long tweetId , long loggedUserId) {
         Tweet completeTweet = TWEET_REPOSITORY.getById(tweetId);
@@ -135,10 +125,6 @@ public class TweetController implements Repository {
         return true;
     }
 
-    public boolean isSelfTweet(long tweetId) {
-        Tweet tweet = TWEET_REPOSITORY.getById(tweetId);
-        return tweet.getUser().getUsername().equals(LoggedUser.getLoggedUser().getUsername());
-    }
 
     public long getWriterId(long tweetId) {
         return TWEET_REPOSITORY.getById(tweetId).getUser().getId();

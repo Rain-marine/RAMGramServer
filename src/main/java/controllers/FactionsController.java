@@ -1,10 +1,7 @@
 package controllers;
 
 import models.Group;
-import models.LoggedUser;
 import models.User;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import repository.Repository;
 
 import java.util.ArrayList;
@@ -45,8 +42,8 @@ public class FactionsController implements Repository {
         return loggedUser.getGroups();
     }
 
-    public List<User> getActiveFollowers() {
-        List<User> followers = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId()).getFollowers();
+    public List<User> getActiveFollowers(long loggedUserId) {
+        List<User> followers = USER_REPOSITORY.getById(loggedUserId).getFollowers();
         List<User> activeFollowers = new ArrayList<>();
         followers.forEach(following -> {
             if (following.isActive())
@@ -75,11 +72,6 @@ public class FactionsController implements Repository {
         return activeBlockedUsers;
     }
 
-    public List<User> getGroupMembers(int factionId) {
-        Group faction = FACTION_REPOSITORY.getFactionById(factionId);
-        return faction.getMembers();
-    }
-
     public void deleteFaction(int groupId , long loggedUserId) {
         FACTION_REPOSITORY.deleteFaction(groupId);
         USER_REPOSITORY.getById(loggedUserId).getGroups().remove(FACTION_REPOSITORY.getFactionById(groupId));
@@ -93,12 +85,4 @@ public class FactionsController implements Repository {
         FACTION_REPOSITORY.addUserToFaction(factionId, USER_REPOSITORY.getByUsername(username).getId());
     }
 
-    public ArrayList<String> getFactionNames() {
-        ArrayList<String> factionNames = new ArrayList<>();
-        List<Group> factions = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId()).getGroups();
-        for (Group faction : factions) {
-            factionNames.add(faction.getName());
-        }
-        return factionNames;
-    }
 }

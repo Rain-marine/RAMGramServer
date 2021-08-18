@@ -26,7 +26,7 @@ public class TrimmedFaction implements Repository, Controllers {
         switch (id){
             case -1 -> {
                 this.name = "FOLLOWERS";
-                users = FACTIONS_CONTROLLER.getActiveFollowings(ownerId);
+                users = FACTIONS_CONTROLLER.getActiveFollowers(ownerId);
             }
             case -2 ->{
                 this.name = "FOLLOWINGS";

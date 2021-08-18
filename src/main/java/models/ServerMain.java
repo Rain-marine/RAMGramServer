@@ -27,6 +27,10 @@ public class ServerMain {
 
     }
 
+    public static void removeOnlineUser(long userId) {
+        onlineUsers.entrySet().removeIf(entry -> (userId == entry.getValue()));
+    }
+
     public void run() {
 
         while (true) {
@@ -46,6 +50,10 @@ public class ServerMain {
         return Objects.equals(onlineUsers.get(token), userId);
     }
 
+    public static boolean isUserOnline(long userId){
+        return onlineUsers.containsValue(userId);
+    }
+
     public static synchronized void addOnlineUser(String token, Long userId) {
         onlineUsers.put(token, userId);
     }
@@ -56,5 +64,29 @@ public class ServerMain {
 
     public static synchronized void setOnlineUsers(HashMap<String, Long> onlineUsers) {
         ServerMain.onlineUsers = onlineUsers;
+    }
+
+    public ServerSocket getServerSocket() {
+        return serverSocket;
+    }
+
+    public void setServerSocket(ServerSocket serverSocket) {
+        this.serverSocket = serverSocket;
+    }
+
+    public ObjectMapper getObjectMapper() {
+        return objectMapper;
+    }
+
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 }

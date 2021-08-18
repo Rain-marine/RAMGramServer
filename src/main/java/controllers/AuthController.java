@@ -1,7 +1,6 @@
 package controllers;
 
 import exceptions.InvalidInputException;
-import models.LoggedUser;
 import models.ServerMain;
 import models.User;
 import org.apache.log4j.LogManager;
@@ -12,7 +11,6 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
-import java.util.HashMap;
 
 
 public class AuthController implements Repository {
@@ -53,7 +51,6 @@ public class AuthController implements Repository {
         byte[] bytes = new byte[20];
         secureRandom.nextBytes(bytes);
         Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
-        String token = encoder.encodeToString(bytes);
-        return token;
+        return encoder.encodeToString(bytes);
     }
 }

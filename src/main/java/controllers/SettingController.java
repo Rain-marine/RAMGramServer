@@ -1,7 +1,7 @@
 package controllers;
 
 
-import models.LoggedUser;
+import models.ServerMain;
 import models.User;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -18,19 +18,19 @@ public class SettingController implements Repository {
     public SettingController() {
     }
 
-    public void logout() {
-        if (!(LoggedUser.getLoggedUser() == null))
-            USER_REPOSITORY.setLastSeen(LoggedUser.getLoggedUser().getId(), new Date());
-        LoggedUser.setLoggedUser(null);
+    public void logout(long userId) {
+        USER_REPOSITORY.setLastSeen(userId, new Date());
+        log.info(userId + " logged out");
+        ServerMain.removeOnlineUser(userId);
     }
 
     public void deleteAccount(long userId) {
         USER_REPOSITORY.deleteAccount(userId);
         log.info("account deleted ");
-        LoggedUser.setLoggedUser(null);
+        ServerMain.removeOnlineUser(userId);
     }
 
-    public boolean isPasswordCorrect(String password , long userId) {
+    public boolean isPasswordCorrect(String password, long userId) {
         return USER_REPOSITORY.getById(userId).getPassword().equals(password);
     }
 
@@ -39,14 +39,14 @@ public class SettingController implements Repository {
         return user.isPublic();
     }
 
-    public void changeAccountVisibility(boolean newVisibility , long userId) {
+    public void changeAccountVisibility(boolean newVisibility, long userId) {
         USER_REPOSITORY.changeAccountVisibility(userId, newVisibility);
     }
 
     public void deActiveAccount(long userId) {
         USER_REPOSITORY.deactivateAccount(userId);
         log.info(userId + " account deActivated");
-        logout();
+        logout(userId);
     }
 
     public String getUserLastSeenStatus(String username) {
@@ -54,37 +54,43 @@ public class SettingController implements Repository {
         return user.getLastSeenStatus();
     }
 
-    public void changeLastSeenStatus(String newStatus , long userId) {
+    public void changeLastSeenStatus(String newStatus, long userId) {
         USER_REPOSITORY.changeLastSeenStatus(userId, newStatus);
         log.info("last seen status for " + userId + " was changed to " + newStatus);
     }
 
-    public void changePassword(String newPassword , long userId) {
+    public void changePassword(String newPassword, long userId) {
         USER_REPOSITORY.changePassword(userId, newPassword);
     }
 
-    public String lastSeenForLoggedUser(long rawUserId , long loggedUserId) {
+    public String lastSeenForLoggedUser(long rawUserId, long loggedUserId) {
         User user = USER_REPOSITORY.getById(rawUserId);
         String status = USER_REPOSITORY.getById(user.getId()).getLastSeenStatus();
         if (user.getFollowings().stream().noneMatch(it -> it.getId() == loggedUserId)) {
             return ("last seen recently");
-        } else if (status.equals("everybody"))
-            return (user.getLastSeen().toString());
-        else if (status.equals("following")) {
+        } else if (status.equals("everybody")) {
+            if (ServerMain.isUserOnline(rawUserId)) {
+                return ("Online");
+            } else
+                return (user.getLastSeen().toString());
+        } else if (status.equals("following")) {
             List<User> userFollowing = user.getFollowings();
             for (User following : userFollowing) {
                 if (following.getId() == loggedUserId) {
-                    return (user.getLastSeen().toString());
+                    if (ServerMain.isUserOnline(rawUserId)) {
+                        return ("Online");
+                    } else
+                        return (user.getLastSeen().toString());
                 }
             }
         }
         return ("last seen recently");
     }
 
-    public String birthdayForLoggedUser(long userId , long loggedUserId) {
+    public String birthdayForLoggedUser(long userId, long loggedUserId) {
         User user = USER_REPOSITORY.getById(userId);
         User.Level status = user.isBirthDayVisible();
-        if (user.getBirthday() != null){
+        if (user.getBirthday() != null) {
             if (status == User.Level.FOLLOWING) {
                 List<User> following = user.getFollowings();
                 for (User followed : following) {
@@ -98,8 +104,7 @@ public class SettingController implements Repository {
             } else {
                 return "not visible";
             }
-        }
-        else
+        } else
             return "not visible";
     }
 
@@ -126,7 +131,7 @@ public class SettingController implements Repository {
     public String phoneNumberForLoggedUser(long userId, long loggedUserId) {
         User user = USER_REPOSITORY.getById(userId);
         User.Level status = user.isPhoneNumberVisible();
-        if (!user.getPhoneNumber().equals("")){
+        if (!user.getPhoneNumber().equals("")) {
             if (status == User.Level.FOLLOWING) {
                 List<User> following = user.getFollowings();
                 for (User followed : following) {
@@ -140,51 +145,9 @@ public class SettingController implements Repository {
             } else {
                 return "not visible";
             }
-        }
-        else {
+        } else {
             return "not visible";
         }
-
-
-    }
-
-    public User.Level getUserNumberStatus(User loggedUser) {
-        return USER_REPOSITORY.getById(loggedUser.getId()).isPhoneNumberVisible();
-    }
-
-    public User.Level getUserEmailStatus(User loggedUser) {
-        return USER_REPOSITORY.getById(loggedUser.getId()).isEmailVisible();
-    }
-
-    public User.Level getUserBirthdayStatus(User loggedUser) {
-        return USER_REPOSITORY.getById(loggedUser.getId()).isBirthDayVisible();
-    }
-
-    public void changeNumberStatus(String newStatus) {
-        User.Level status = switch (newStatus) {
-            case "FOLLOWING" -> User.Level.FOLLOWING;
-            case "ALL" -> User.Level.ALL;
-            default -> User.Level.NONE;
-        };
-        USER_REPOSITORY.changeNumberStatus(LoggedUser.getLoggedUser().getId(), status);
-    }
-
-    public void changeEmailStatus(String newStatus) {
-        User.Level status = switch (newStatus) {
-            case "FOLLOWING" -> User.Level.FOLLOWING;
-            case "ALL" -> User.Level.ALL;
-            default -> User.Level.NONE;
-        };
-        USER_REPOSITORY.changeEmailStatus(LoggedUser.getLoggedUser().getId(), status);
-    }
-
-    public void changeBirthdayStatus(String newStatus) {
-        User.Level status = switch (newStatus) {
-            case "FOLLOWING" -> User.Level.FOLLOWING;
-            case "ALL" -> User.Level.ALL;
-            default -> User.Level.NONE;
-        };
-        USER_REPOSITORY.changeBirthdayStatus(LoggedUser.getLoggedUser().getId(), status);
     }
 
     public void activateAccount(long userId) {

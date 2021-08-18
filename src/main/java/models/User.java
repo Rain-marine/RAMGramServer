@@ -115,7 +115,7 @@ public class User {
             name = "user_following_request",
             joinColumns = @JoinColumn(name = "following_id"),
             inverseJoinColumns = @JoinColumn(name = "follower_id"))
-    private List<User> followerRequest; // todo : it is not necessary
+    private List<User> followerRequest;
 
     @OneToMany(mappedBy = "owner" ,orphanRemoval = true,cascade = CascadeType.ALL)
     private List<Group> groups;
@@ -411,7 +411,7 @@ public class User {
         return senderNotifications;
     }
 
-    public void setSenderNotifications(List notifications) {
+    public void setSenderNotifications(List<Notification> notifications) {
         this.senderNotifications = notifications;
     }
 

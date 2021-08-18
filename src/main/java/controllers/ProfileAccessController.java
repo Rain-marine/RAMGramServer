@@ -1,6 +1,5 @@
 package controllers;
 
-import models.LoggedUser;
 import models.NotificationType;
 import models.User;
 import org.apache.log4j.LogManager;
@@ -10,6 +9,7 @@ import repository.Repository;
 import java.util.List;
 
 public class ProfileAccessController implements Repository {
+    static Logger log = LogManager.getLogger(ProfileAccessController.class);
 
     private final User loggedUser;
     private final long loggedUserId;
@@ -22,6 +22,7 @@ public class ProfileAccessController implements Repository {
         this.otherUser = USER_REPOSITORY.getById(otherUserID);
         this.loggedUserId = loggedUserId;
         this.otherUserId = otherUserID;
+        log.info(loggedUserId + " viewed profile of " + otherUserID);
     }
 
     public boolean[] checkAccessibility() {
@@ -38,6 +39,7 @@ public class ProfileAccessController implements Repository {
             for (User user : loggedUserBlacklist) {
                 if (user.getId() == otherUserId) {
                     results[1] = true;
+                    break;
                 }
             }
             //am I following them?
@@ -45,6 +47,7 @@ public class ProfileAccessController implements Repository {
             for (User user : loggedUserFollowing) {
                 if (user.getId() == otherUserId) {
                     results[2] = true;
+                    break;
                 }
             }
             //am I blocked?
@@ -52,6 +55,7 @@ public class ProfileAccessController implements Repository {
             for (User user : blackList) {
                 if (user.getId() == loggedUserId) {
                     results[3] = true;
+                    break;
                 }
             }
             //is their account private?

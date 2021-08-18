@@ -1,7 +1,6 @@
 package models.trimmed;
 
 import controllers.Controllers;
-import models.LoggedUser;
 
 import java.util.Date;
 

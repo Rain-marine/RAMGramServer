@@ -1,8 +1,6 @@
 package repository;
 
-import controllers.FactionsController;
 import models.Group;
-import models.LoggedUser;
 import models.User;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;

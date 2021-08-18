@@ -1,7 +1,5 @@
 package controllers;
 
-import models.ServerMain;
-import models.User;
 import models.requests.Request;
 import models.responses.Response;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -47,6 +45,14 @@ public class ClientHandler extends Thread{
                 e.printStackTrace();
             }
         }
+        scanner.close();
+        printWriter.close();
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("client disconnected");
     }
 
     public long getLoggedUserId() {

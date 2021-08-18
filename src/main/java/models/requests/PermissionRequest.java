@@ -1,6 +1,7 @@
 package models.requests;
 
 import controllers.ClientHandler;
+import controllers.Controllers;
 import controllers.ProfileAccessController;
 import models.responses.BooleanResponse;
 import models.responses.PermissionResponse;
@@ -13,14 +14,12 @@ import java.util.ArrayList;
 
 
 @JsonTypeName("permission")
-public class PermissionRequest implements Request{
+public class PermissionRequest implements Request , Controllers {
 
-    public enum TYPE {REGISTER , PROFILE}
     private String token;
     private long userId;
     private long otherUserId;
-    private TYPE type;
-    private ArrayList<String> info; //username , email , number
+
 
 
     public PermissionRequest() {
@@ -29,13 +28,7 @@ public class PermissionRequest implements Request{
     @Override
     public Response execute(ClientHandler clientHandler) {
         if (clientHandler.getToken().equals(token)) {
-            switch (type){
-                case PROFILE -> {
-                    return new PermissionResponse(new ProfileAccessController(otherUserId , userId).checkAccessibility());
-                }
-                default -> {return  new BooleanResponse(true);}
-            }
-
+            return new PermissionResponse(new ProfileAccessController(otherUserId , userId).checkAccessibility());
         } else
             return new BooleanResponse(false);
     }
@@ -64,19 +57,4 @@ public class PermissionRequest implements Request{
         this.otherUserId = otherUserId;
     }
 
-    public TYPE getType() {
-        return type;
-    }
-
-    public void setType(TYPE type) {
-        this.type = type;
-    }
-
-    public ArrayList<String> getInfo() {
-        return info;
-    }
-
-    public void setInfo(ArrayList<String> info) {
-        this.info = info;
-    }
 }

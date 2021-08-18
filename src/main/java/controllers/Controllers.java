@@ -9,4 +9,5 @@ public interface Controllers {
     MessageController MESSAGE_CONTROLLER = new MessageController();
     ChatController CHAT_CONTROLLER = new ChatController();
     AuthController AUTH_CONTROLLER = new AuthController();
+    RegisterManager REGISTER_MANAGER = new RegisterManager();
 }
