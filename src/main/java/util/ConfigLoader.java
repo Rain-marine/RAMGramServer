@@ -1,7 +1,5 @@
 package util;
 
-import exceptions.FXMLLoadException;
-
 import java.io.*;
 import java.util.Properties;
 
@@ -18,47 +16,7 @@ public class ConfigLoader {
         }
         return null;
     }
-
-    public static String loadFXML(String fxml){
-        String fxmlConfigFilePath = readConfigURL("FXMLUrlsConfig");
-        try {
-            assert fxmlConfigFilePath != null;
-            InputStream inputStream = new FileInputStream(fxmlConfigFilePath);
-            prop.load(inputStream);
-            return (prop.getProperty(fxml));
-        }
-        catch (IOException e){
-            new FXMLLoadException(fxml);
-        }
-        return null;
-    }
-
-    public static int getPreviousMenuCode(String menuName){
-        String fxmlConfigFilePath = readConfigURL("previousMenuConfig");
-        try {
-            assert fxmlConfigFilePath != null;
-            InputStream inputStream = new FileInputStream(fxmlConfigFilePath);
-            prop.load(inputStream);
-            return (Integer.parseInt(prop.getProperty(menuName)));
-        }
-        catch (IOException e){
-            System.err.println("previous menus codes are missing");
-        }
-        return 2;
-    }
-
-    public static String readProperty(String property){
-        String graphicalConfigFilePath = readConfigURL("graphicConfig");
-        try {
-            assert graphicalConfigFilePath != null;
-            InputStream inputStream = new FileInputStream(graphicalConfigFilePath);
-            prop.load(inputStream);
-            return (prop.getProperty(property));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "404 : property not found";
-    }
+    
 
     public static String readNetworkProperty(String property){
         String networkConfigFilePath = readConfigURL("networkConfig");

@@ -2,41 +2,33 @@ package models.requests;
 
 import controllers.ClientHandler;
 import models.responses.BooleanResponse;
-import models.responses.ChatInfoResponse;
 import models.responses.Response;
+import models.responses.UserResponse;
+import models.trimmed.TrimmedUser;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
-@JsonTypeName("chatInfo")
-public class ChatInfoRequest implements Request {
+@JsonTypeName("user")
+public class UserRequest implements Request{
 
-    private long chatId;
     private String token;
     private long userId;
+    private long otherUserId;
 
-    public ChatInfoRequest(long chatId, String token, long userId) {
-        this.chatId = chatId;
+    public UserRequest(String token, long userId, long otherUserId) {
         this.token = token;
         this.userId = userId;
-    }
-
-    public ChatInfoRequest() {
+        this.otherUserId = otherUserId;
     }
 
     @Override
     public Response execute(ClientHandler clientHandler) {
-        if(clientHandler.getToken().equals(token)){
-            return new ChatInfoResponse(chatId , userId);
-        }
-        else
+        if (clientHandler.getToken().equals(token)) {
+            return new UserResponse(new TrimmedUser(otherUserId , userId));
+        } else
             return new BooleanResponse(false);
     }
 
-    public long getChatId() {
-        return chatId;
-    }
-
-    public void setChatId(long chatId) {
-        this.chatId = chatId;
+    public UserRequest() {
     }
 
     public String getToken() {
@@ -53,5 +45,13 @@ public class ChatInfoRequest implements Request {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public long getOtherUserId() {
+        return otherUserId;
+    }
+
+    public void setOtherUserId(long otherUserId) {
+        this.otherUserId = otherUserId;
     }
 }

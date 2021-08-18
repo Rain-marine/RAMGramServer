@@ -3,6 +3,7 @@ package models.requests;
 
 import controllers.ClientHandler;
 import models.responses.NotificationResponse;
+import models.responses.PermissionResponse;
 import models.responses.Response;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
@@ -38,7 +39,9 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
         @JsonSubTypes.Type(value = SendMessageRequest.class, name = "sendMessage"),
         @JsonSubTypes.Type(value = NotificationRequest.class, name = "notification"),
         @JsonSubTypes.Type(value = FactionActionRequest.class, name = "factionAction"),
-//        @JsonSubTypes.Type(value = LoginRequest.class, name = "login"),
+        @JsonSubTypes.Type(value = UserRequest.class, name = "user"),
+        @JsonSubTypes.Type(value = PermissionRequest.class, name = "permission"),
+
 //        @JsonSubTypes.Type(value = LoginRequest.class, name = "login"),
 //        @JsonSubTypes.Type(value = LoginRequest.class, name = "login"),
 //        @JsonSubTypes.Type(value = LoginRequest.class, name = "login"),

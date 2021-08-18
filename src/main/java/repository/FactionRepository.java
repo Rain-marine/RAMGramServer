@@ -98,7 +98,7 @@ public class FactionRepository {
             Group object = em.find(Group.class, id);
             em.remove(object);
             et.commit();
-            log.info("user " + LoggedUser.getLoggedUser().getUsername() + " deleted faction: "+ factionName);
+            log.info("user deleted faction: "+ factionName);
 
         } catch (Exception e) {
             log.error("faction " +id +" deleting failed: error:  "+ e.getMessage());

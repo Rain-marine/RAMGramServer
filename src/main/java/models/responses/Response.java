@@ -24,8 +24,8 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
         @JsonSubTypes.Type(value = ExploreResponse.class, name = "explore"),
         @JsonSubTypes.Type(value = NotificationResponse.class, name = "notification"),
         @JsonSubTypes.Type(value = FactionResponse.class, name = "faction"),
-//        @JsonSubTypes.Type(value = LoginResponse.class, name = "login"),
-//        @JsonSubTypes.Type(value = LoginResponse.class, name = "login"),
+        @JsonSubTypes.Type(value = UserResponse.class, name = "user"),
+        @JsonSubTypes.Type(value = PermissionResponse.class, name = "permission"),
 //        @JsonSubTypes.Type(value = LoginResponse.class, name = "login"),
 //        @JsonSubTypes.Type(value = LoginResponse.class, name = "login"),
 
