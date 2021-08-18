@@ -252,7 +252,6 @@ public class UserRepository {
 
     public User getByUsername(String username) {
         EntityManager em = EntityManagerProvider.getEntityManager();
-
         try {
             CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery<User> cq = cb.createQuery(User.class);
