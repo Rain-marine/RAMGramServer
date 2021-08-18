@@ -15,8 +15,8 @@ public class FactionsController implements Repository {
     public FactionsController() {
     }
 
-    public void insertNewFaction(String name, List<String> users) {
-        User loggedUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
+    public void insertNewFaction(String name, List<String> users , long loggedUserId) {
+        User loggedUser = USER_REPOSITORY.getById(loggedUserId);
         Group newGroup = new Group(name, loggedUser);
 
         List<User> members = new ArrayList<>();
@@ -28,8 +28,8 @@ public class FactionsController implements Repository {
         FACTION_REPOSITORY.insert(newGroup);
     }
 
-    public boolean canAddToGroup(String username) {
-        User loggedUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
+    public boolean canAddToGroup(String username , long loggedUserId) {
+        User loggedUser = USER_REPOSITORY.getById(loggedUserId);
         List<User> followings = loggedUser.getFollowings();
         for (User user : followings) {
             if(username.equals(user.getUsername())){
@@ -40,8 +40,8 @@ public class FactionsController implements Repository {
         return false;
     }
 
-    public List<Group> getFactions() {
-        User loggedUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
+    public List<Group> getFactions(long loggedUserId) {
+        User loggedUser = USER_REPOSITORY.getById(loggedUserId);
         return loggedUser.getGroups();
     }
 
@@ -65,8 +65,8 @@ public class FactionsController implements Repository {
         return activeFollowings;
     }
 
-    public List<User> getActiveBlockedUsers() {
-        List<User> blockedUsers = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId()).getBlackList();
+    public List<User> getActiveBlockedUsers(long loggedUserId) {
+        List<User> blockedUsers = USER_REPOSITORY.getById(loggedUserId).getBlackList();
         List<User> activeBlockedUsers = new ArrayList<>();
         blockedUsers.forEach(following -> {
             if(following.isActive())
@@ -80,10 +80,9 @@ public class FactionsController implements Repository {
         return faction.getMembers();
     }
 
-    public void deleteFaction(int groupId) {
+    public void deleteFaction(int groupId , long loggedUserId) {
         FACTION_REPOSITORY.deleteFaction(groupId);
-        USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId()).getGroups().remove(FACTION_REPOSITORY.getFactionById(groupId));
-        //LoggedUser.setLoggedUser(userRepository.getById(LoggedUser.getLoggedUser().getId()));
+        USER_REPOSITORY.getById(loggedUserId).getGroups().remove(FACTION_REPOSITORY.getFactionById(groupId));
     }
 
     public void deleteUserFromFaction(int factionId, long userId) {

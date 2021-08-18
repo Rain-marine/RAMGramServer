@@ -3,14 +3,16 @@ package models.requests;
 import controllers.ClientHandler;
 import controllers.Controllers;
 import models.responses.BooleanResponse;
+import models.responses.FactionResponse;
 import models.responses.ListResponse;
 import models.responses.Response;
 import org.codehaus.jackson.annotate.JsonTypeName;
+import repository.FactionRepository;
 
 @JsonTypeName("list")
 public class ListRequest implements Request, Controllers {
 
-    public enum TYPE {TIMELINE, EXPLORER , COMMENT ,CHAT ,MESSAGE , NOTIFICATION ,FACTION , SAVED_MESSAGES , SAVED_TWEET, TWEETS}
+    public enum TYPE {TIMELINE, EXPLORER, COMMENT, CHAT, MESSAGE, FACTION, SAVED_MESSAGES, SAVED_TWEET, TWEETS , FOLLOWINGS , FOLLOWERS , BLACKLIST}
 
     private String token;
     private long userId;
@@ -29,14 +31,13 @@ public class ListRequest implements Request, Controllers {
 
     @Override
     public Response execute(ClientHandler clientHandler) {
-        if(clientHandler.getToken().equals(token)){
-            //todo
-            switch (type){
+        if (clientHandler.getToken().equals(token)) {
+            switch (type) {
                 case TIMELINE -> {
                     return new ListResponse(TWEET_CONTROLLER.getFollowingTweets(userId));
                 }
                 case EXPLORER -> {
-                   return new ListResponse(TWEET_CONTROLLER.getTopTweets(userId));
+                    return new ListResponse(TWEET_CONTROLLER.getTopTweets(userId));
                 }
                 case CHAT -> {
                     return new ListResponse(CHAT_CONTROLLER.getChatsIds(userId));
@@ -51,18 +52,29 @@ public class ListRequest implements Request, Controllers {
                     return new ListResponse(TWEET_CONTROLLER.getTweetComments(superId));
                 }
                 case MESSAGE -> {
-                    CHAT_CONTROLLER.seeChat(superId , userId);
+                    CHAT_CONTROLLER.seeChat(superId, userId);
                     return new ListResponse(CHAT_CONTROLLER.getMessages(superId));
                 }
                 case TWEETS -> {
                     return new ListResponse(TWEET_CONTROLLER.getAllTweets(superId));
                 }
+                case FACTION -> {
+                    return new FactionResponse(FACTIONS_CONTROLLER.getFactions(userId) , userId);
+                }
+                case FOLLOWERS -> {
+                    return new FactionResponse(-1 , userId);
+                }
+                case FOLLOWINGS -> {
+                    return new FactionResponse(-2 , userId);
+                }
+                case BLACKLIST -> {
+                    return new FactionResponse(-3 , userId);
+                }
                 default -> {
                     return new BooleanResponse(false);
                 }
             }
-        }
-        else
+        } else
             return new BooleanResponse(false);
     }
 

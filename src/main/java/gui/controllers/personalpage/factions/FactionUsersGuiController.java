@@ -62,7 +62,6 @@ public class FactionUsersGuiController implements Initializable, Controllers {
     public void deleteFactionButtonClicked(ActionEvent actionEvent) {
         boolean answer = SimpleConfirmBox.display("confirmation" , "Are you sure to delete the faction?");
         if (answer){
-            FACTIONS_CONTROLLER.deleteFaction(factionID);
             SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("factionList"),actionEvent);
         }
 

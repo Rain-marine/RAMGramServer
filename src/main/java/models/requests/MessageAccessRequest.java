@@ -10,7 +10,7 @@ import org.codehaus.jackson.annotate.JsonTypeName;
 @JsonTypeName("messageAccess")
 public class MessageAccessRequest implements Request, Controllers {
 
-    public enum TYPE {USER, GROUP}
+    public enum TYPE {USER, GROUP , FACTION}
 
     private String token;
     private long userId;
@@ -33,6 +33,9 @@ public class MessageAccessRequest implements Request, Controllers {
                 }
                 case GROUP -> {
                     return new BooleanResponse(MESSAGE_CONTROLLER.canSendMessageToGroup(targetUsername, userId));
+                }
+                case FACTION -> {
+                    return new BooleanResponse(FACTIONS_CONTROLLER.canAddToGroup(targetUsername , userId));
                 }
                 default -> {
                     return new BooleanResponse(true);

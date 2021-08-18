@@ -53,15 +53,14 @@ public class CreatFactionBox implements ConfirmBox, Controllers {
         confirmButton.setOnAction(e -> {
             String username = usernameField.getText();
             if (!username.equals("")) {
-                if (!FACTIONS_CONTROLLER.canAddToGroup(username)) {
                     error.setText("Cannot add " + username + " to the group!.\nYou must follow The user");
                     usernameField.setText("");
-                }
-                else {
+
+
                     users.add(username);
                     error.setText("user Added");
                     addedUsers.setText(String.join(", " , users));
-                }
+
 
             }
         });
@@ -78,7 +77,6 @@ public class CreatFactionBox implements ConfirmBox, Controllers {
                     error.setText("faction should have at least 1 member");
                 }
                 else if (!existingFactions.contains(name)){
-                    FACTIONS_CONTROLLER.insertNewFaction(name , users);
                     answer =  true;
                     window.close();
                 }

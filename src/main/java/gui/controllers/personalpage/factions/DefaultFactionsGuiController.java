@@ -41,7 +41,7 @@ public class DefaultFactionsGuiController implements Initializable, Controllers 
                 members = FACTIONS_CONTROLLER.getActiveFollowings(LoggedUser.getLoggedUser().getId());
                 factionID = -2;
             }
-            case BLACKLIST -> {members = FACTIONS_CONTROLLER.getActiveBlockedUsers();
+            case BLACKLIST -> {members = null;
                 factionID = -3;
             }
         }

@@ -9,7 +9,7 @@ import org.codehaus.jackson.annotate.JsonTypeName;
 @JsonTypeName("userAction")
 public class UserActionRequest implements Request, Controllers {
 
-    public enum USER_ACTION {MUTE , BLOCK , REPORT , UNBLOCK , FOLLOW , UNFOLLOW , QUIET_UNFOLLOW , REQUEST , ACCEPT , REJECT , DELETE_REQUEST , QUIET_REJECT}
+    public enum USER_ACTION {MUTE , BLOCK , REPORT , UNBLOCK , FOLLOW , UNFOLLOW , QUIET_UNFOLLOW , REQUEST , ACCEPT , REJECT , DELETE_REQUEST , QUIET_REJECT, DELETE_NOTIF}
 
     private String token;
     private long userId;
@@ -42,6 +42,7 @@ public class UserActionRequest implements Request, Controllers {
                 case QUIET_REJECT -> NOTIFICATION_CONTROLLER.rejectFollowRequestWithoutNotification(otherId , userId);
                 case QUIET_UNFOLLOW -> NOTIFICATION_CONTROLLER.unfollowUserWithoutNotification(otherId , userId);
                 case DELETE_REQUEST -> NOTIFICATION_CONTROLLER.deleteRequest(otherId , userId);
+                case DELETE_NOTIF -> NOTIFICATION_CONTROLLER.deleteNotification(otherId, userId);
             }
             return new BooleanResponse(true);
         }
