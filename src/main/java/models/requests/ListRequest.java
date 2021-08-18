@@ -10,7 +10,7 @@ import org.codehaus.jackson.annotate.JsonTypeName;
 @JsonTypeName("list")
 public class ListRequest implements Request, Controllers {
 
-    public enum TYPE {TIMELINE, EXPLORER , COMMENT ,CHAT ,MESSAGE , NOTIFICATION ,FACTION , SAVED_MESSAGES , SAVED_TWEET}
+    public enum TYPE {TIMELINE, EXPLORER , COMMENT ,CHAT ,MESSAGE , NOTIFICATION ,FACTION , SAVED_MESSAGES , SAVED_TWEET, TWEETS}
 
     private String token;
     private long userId;
@@ -53,6 +53,9 @@ public class ListRequest implements Request, Controllers {
                 case MESSAGE -> {
                     CHAT_CONTROLLER.seeChat(superId , userId);
                     return new ListResponse(CHAT_CONTROLLER.getMessages(superId));
+                }
+                case TWEETS -> {
+                    return new ListResponse(TWEET_CONTROLLER.getAllTweets(superId));
                 }
                 default -> {
                     return new BooleanResponse(false);
