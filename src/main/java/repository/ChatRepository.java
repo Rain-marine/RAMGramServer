@@ -3,6 +3,7 @@ package repository;
 import models.*;
 import models.types.MessageStatus;
 import repository.utils.EntityManagerProvider;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
@@ -40,7 +41,6 @@ public class ChatRepository {
         //add message to chat
         //set hasSeen to false
         //UnseenCount += 1
-
         EntityManager em = EntityManagerProvider.getEntityManager();
         EntityTransaction et = null;
         try {
@@ -48,7 +48,7 @@ public class ChatRepository {
             et.begin();
             Chat chat = em.find(Chat.class, chatId);
             List<UserChat> userChats = chat.getUserChats().stream()
-                    .filter(it ->  it.getUser().getId() != message.getSender().getId()).collect(Collectors.toList());
+                    .filter(it -> it.getUser().getId() != message.getSender().getId()).collect(Collectors.toList());
             for (UserChat userChat : userChats) {
                 userChat.setUnseenCount(userChat.getUnseenCount() + 1);
                 userChat.setHasSeen(false);
@@ -57,6 +57,10 @@ public class ChatRepository {
             chat.getMessages().add(message);
             em.persist(chat);
             et.commit();
+
+            if (!chat.isGroup())
+                checkReceived(message.getId());
+
         } catch (Exception e) {
             System.err.println(e.getMessage());
             if (et != null) {
@@ -65,6 +69,13 @@ public class ChatRepository {
             e.printStackTrace();
         } finally {
             em.close();
+        }
+    }
+
+    private void checkReceived(long messageId) {
+        long receiverId = new MessageRepository().getById(messageId).getReceiver().getId();
+        if(ServerMain.isUserOnline(receiverId)){
+            changStatus(messageId , MessageStatus.RECEIVED);
         }
     }
 
@@ -87,10 +98,10 @@ public class ChatRepository {
         }
     }
 
-    public void clearUnSeenCount(long chatId , long userId) {
+    public void clearUnSeenCount(long chatId, long userId) {
         //set unseen count to 0
         // set hasSeen to true
-        seeMessages(chatId , userId);
+        seeMessages(chatId, userId);
         EntityManager em = EntityManagerProvider.getEntityManager();
         EntityTransaction et = null;
         try {
@@ -128,15 +139,15 @@ public class ChatRepository {
 
             Join<Message, Chat> messageChatJoin = root.join("chat");
             cq.select(root);
-            Predicate chat = cb.equal(messageChatJoin.get("id") ,chatId);
+            Predicate chat = cb.equal(messageChatJoin.get("id"), chatId);
 
-            cq.where(cb.and(receiver,chat ));
+            cq.where(cb.and(receiver, chat));
 
             TypedQuery<Message> typedQuery = em.createQuery(cq);
             List<Message> messages = typedQuery.getResultList();
 
             for (Message message : messages) {
-                changStatus(message.getId() , MessageStatus.SEEN);
+                changStatus(message.getId(), MessageStatus.SEEN);
             }
 
         } catch (NoResultException e) {
@@ -238,7 +249,7 @@ public class ChatRepository {
             List<Message> messages = typedQuery.getResultList();
 
             for (Message message : messages) {
-                changStatus(message.getId() , MessageStatus.RECEIVED);
+                changStatus(message.getId(), MessageStatus.RECEIVED);
             }
 
         } catch (NoResultException e) {

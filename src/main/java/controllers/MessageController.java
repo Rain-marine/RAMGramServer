@@ -1,6 +1,7 @@
 package controllers;
 
 import models.*;
+import models.types.MessageLink;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import repository.*;
@@ -36,13 +37,13 @@ public class MessageController implements Repositories {
         return tweetIDs;
     }
 
-    public boolean canSendMessageToUser(String userToSendMessage , long loggedUserId) {
+    public boolean canSendMessageToUser(String userToSendMessage, long loggedUserId) {
         User user = USER_REPOSITORY.getByUsername(userToSendMessage);
         if (user == null || !user.isActive())
             return false;
-        if (hasFollow(user.getFollowers() , loggedUserId))
+        if (hasFollow(user.getFollowers(), loggedUserId))
             return true;
-        return isFollower(user.getFollowings() , loggedUserId);
+        return isFollower(user.getFollowings(), loggedUserId);
     }
 
     private boolean isFollower(List<User> followings, long loggedUserId) {
@@ -53,7 +54,7 @@ public class MessageController implements Repositories {
         return false;
     }
 
-    private boolean hasFollow(List<User> followers , long loggedUserId) {
+    private boolean hasFollow(List<User> followers, long loggedUserId) {
         for (User user : followers) {
             if (user.getId() == loggedUserId)
                 return true;
@@ -70,14 +71,15 @@ public class MessageController implements Repositories {
         return false;
     }
 
-    public void sendMessage(String message, byte[] image, List<String> users, List<String> groupsToSendMessage , long loggedUserId) {
+    public void sendMessage(String message, byte[] image, List<String> users, List<String> groupsToSendMessage, long loggedUserId, MessageLink link) {
         User user = USER_REPOSITORY.getById(loggedUserId);
         List<Chat> userChats = user.getChats();
         List<Group> groups = user.getGroups();
         HashMap<String, Group> groupNameToGroup = extractGroupNameToGroup(groups);
 
-        sendMessageToUsers(message, image, users, userChats , loggedUserId);
-        sendMessageToGroups(message, image, groupsToSendMessage, groupNameToGroup, userChats , loggedUserId);
+        sendMessageToUsers(message, image, users, userChats, loggedUserId, link);
+        if (groupsToSendMessage != null)
+            sendMessageToGroups(message, image, groupsToSendMessage, groupNameToGroup, userChats, loggedUserId);
     }
 
 
@@ -86,16 +88,17 @@ public class MessageController implements Repositories {
             List<String> users = new ArrayList<>();
             Group faction = FACTION_REPOSITORY.getFactionById(groups.get(groupName).getId());
             faction.getMembers().forEach(member -> users.add(member.getUsername()));
-            sendMessageToUsers(message, image, users, chats ,loggedUserId );
+            sendMessageToUsers(message, image, users, chats, loggedUserId, MessageLink.NONE);
         }
     }
 
-    private void sendMessageToUsers(String message, byte[] image, List<String> users, List<Chat> chats , long loggedUserId) {
+    private void sendMessageToUsers(String message, byte[] image, List<String> users, List<Chat> chats, long loggedUserId, MessageLink link) {
         for (String user : users) {
             boolean hasSent = false;
             User loggedUser = USER_REPOSITORY.getById(loggedUserId);
             User receiver = USER_REPOSITORY.getByUsername(user);
             Message newMessage = new Message(message, image, loggedUser, receiver);
+            newMessage.setLink(link);
             for (Chat chat : chats) {
                 if (chat.getUserChats().size() == 2 &&
                         (chat.getUserChats().get(0).getUser().getUsername().equals(user)
@@ -113,13 +116,13 @@ public class MessageController implements Repositories {
                     }
                 });
                 CHAT_REPOSITORY.insert(newChat);
-                Chat chat = getChatWithId(receiver.getId() , loggedUserId);
+                Chat chat = getChatWithId(receiver.getId(), loggedUserId);
                 CHAT_REPOSITORY.addMessageToChat(chat.getId(), newMessage);
             }
         }
     }
 
-    public void insertSavedMessage(long messageId , long loggedUserId) {
+    public void insertSavedMessage(long messageId, long loggedUserId) {
         MESSAGE_REPOSITORY.addMessageToSavedMessage(loggedUserId, MESSAGE_REPOSITORY.getById(messageId));
     }
 
@@ -130,7 +133,7 @@ public class MessageController implements Repositories {
         return groupNameToGroup;
     }
 
-    public void forwardTweet(long tweetId , String receiver, long loggedUserId) {
+    public void forwardTweet(long tweetId, String receiver, long loggedUserId) {
         Tweet tweet = TWEET_REPOSITORY.getById(tweetId);
         String message = "Tweet forwarded from " + tweet.getUser().getUsername() + "\n" + tweet.getText();
         User loggedUser = USER_REPOSITORY.getById(loggedUserId);
@@ -162,7 +165,7 @@ public class MessageController implements Repositories {
         CHAT_REPOSITORY.insert(newChat);
     }
 
-    public Chat getChatWithId(long userId , long loggedUserId) {
+    public Chat getChatWithId(long userId, long loggedUserId) {
         User loggedUser = USER_REPOSITORY.getById(loggedUserId);
         User receiveUser = USER_REPOSITORY.getById(userId);
         String username = receiveUser.getUsername();
@@ -217,26 +220,26 @@ public class MessageController implements Repositories {
         return MESSAGE_REPOSITORY.getById(messageId).getSender().getProfilePhoto();
     }
 
-    public void forward(long messageID, List<String> users, List<String> factions , long loggedUserId) {
+    public void forward(long messageID, List<String> users, List<String> factions, long loggedUserId) {
         User user = USER_REPOSITORY.getById(loggedUserId);
         List<Chat> userChats = user.getChats();
         List<Group> groups = user.getGroups();
         HashMap<String, Group> groupNameToGroup = extractGroupNameToGroup(groups);
 
-        forwardMessageToUsers(messageID, users, userChats , loggedUserId);
-        forwardMessageToFactions(messageID, factions, groupNameToGroup, userChats , loggedUserId);
+        forwardMessageToUsers(messageID, users, userChats, loggedUserId);
+        forwardMessageToFactions(messageID, factions, groupNameToGroup, userChats, loggedUserId);
     }
 
-    private void forwardMessageToFactions(long messageID, List<String> factions, HashMap<String, Group> groupNameToGroup, List<Chat> chats , long loggedUserId) {
+    private void forwardMessageToFactions(long messageID, List<String> factions, HashMap<String, Group> groupNameToGroup, List<Chat> chats, long loggedUserId) {
         for (String groupName : factions) {
             List<String> users = new ArrayList<>();
             Group faction = FACTION_REPOSITORY.getFactionById(groupNameToGroup.get(groupName).getId());
             faction.getMembers().forEach(member -> users.add(member.getUsername()));
-            forwardMessageToUsers(messageID, users, chats , loggedUserId);
+            forwardMessageToUsers(messageID, users, chats, loggedUserId);
         }
     }
 
-    private void forwardMessageToUsers(long messageID, List<String> users, List<Chat> chats , long loggedUserId) {
+    private void forwardMessageToUsers(long messageID, List<String> users, List<Chat> chats, long loggedUserId) {
         Message message = MESSAGE_REPOSITORY.getById(messageID);
         for (String user : users) {
             boolean hasSent = false;
@@ -262,28 +265,28 @@ public class MessageController implements Repositories {
                     }
                 });
                 CHAT_REPOSITORY.insert(newChat);
-                Chat chat = getChatWithId(receiver.getId() , loggedUserId);
+                Chat chat = getChatWithId(receiver.getId(), loggedUserId);
                 CHAT_REPOSITORY.addMessageToChat(chat.getId(), newMessage);
             }
         }
     }
 
-    public void addSavedMessage(String messageText, byte[] chosenImageByteArray , long loggedUserId) {
+    public void addSavedMessage(String messageText, byte[] chosenImageByteArray, long loggedUserId) {
         Message message = new Message(messageText, chosenImageByteArray, USER_REPOSITORY.getById(loggedUserId));
         MESSAGE_REPOSITORY.addMessageToSavedMessage(loggedUserId, message);
     }
 
-    public long getChatWithUser(long userId , long loggedUserId) {
-        Chat chat = getChatWithId(userId , loggedUserId);
+    public long getChatWithUser(long userId, long loggedUserId) {
+        Chat chat = getChatWithId(userId, loggedUserId);
         if (chat == null)
-            chat = getChatWithId(userId , loggedUserId);
+            chat = getChatWithId(userId, loggedUserId);
         return chat.getId();
     }
 
 
     public enum TYPE {EDIT, DELETE, BOTH, NONE}
 
-    public TYPE getMessageType(long messageId , long loggedUserId) {
+    public TYPE getMessageType(long messageId, long loggedUserId) {
         Message message = MESSAGE_REPOSITORY.getById(messageId);
         boolean editable = (message.getSender().getId() == message.getGrandSender().getId()
                 && message.getSender().getId() == loggedUserId);

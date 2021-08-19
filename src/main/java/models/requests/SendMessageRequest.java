@@ -6,6 +6,7 @@ import models.responses.BooleanResponse;
 import models.responses.ConnectionErrorResponse;
 import models.responses.ExploreResponse;
 import models.responses.Response;
+import models.types.MessageLink;
 import models.types.SendMessageType;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
@@ -42,7 +43,7 @@ public class SendMessageRequest implements Request, Controllers {
         try{
         if (clientHandler.getToken().equals(token)) {
             switch (type) {
-                case SEND -> MESSAGE_CONTROLLER.sendMessage(content,contentImage ,users ,factions , userId);
+                case SEND -> MESSAGE_CONTROLLER.sendMessage(content,contentImage ,users ,factions , userId , MessageLink.NONE);
                 case FORWARD -> MESSAGE_CONTROLLER.forward(contentId,users,factions, userId);
                 case FORWARD_TWEET -> MESSAGE_CONTROLLER.forwardTweet(contentId,targetUsername, userId);
                 case NEW_GROUP -> CHAT_CONTROLLER.createGroupChat(users,content, userId);
@@ -50,6 +51,8 @@ public class SendMessageRequest implements Request, Controllers {
                 case CHAT -> {
                     return new ExploreResponse(MESSAGE_CONTROLLER.getChatWithUser(contentId, userId));
                 }
+                case INVITE -> MESSAGE_CONTROLLER.sendMessage(content , contentImage , users , factions , userId , MessageLink.INVITE);
+                case LINK -> MESSAGE_CONTROLLER.sendMessage(content , contentImage , users , factions , userId , MessageLink.CHAT);
             }
             return new BooleanResponse(true);
         } else
