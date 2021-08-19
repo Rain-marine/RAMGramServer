@@ -133,13 +133,17 @@ public class ChatController implements Repositories {
         List<Chat> chats;
         if(currentChat.isGroup()){
             chats = CHAT_REPOSITORY.getAllChats(loggedUserId).stream().filter(Chat::isGroup).collect(Collectors.toList());
+            for (Chat chat : chats) {
+                if (chat.getName().equals(currentChat.getName()))
+                    return chat.getId();
+            }
         }
         else {
             chats = CHAT_REPOSITORY.getAllChats(loggedUserId).stream().filter(it -> it.getUserChats().size() == 2).collect(Collectors.toList());
-        }
-        for (Chat chat : chats) {
-            if(chat.getUserChats().stream().anyMatch(it -> it.getUser().getId() == mainUserId)){
-                return chat.getId();
+            for (Chat chat : chats) {
+                if(chat.getUserChats().stream().anyMatch(it -> it.getUser().getId() == mainUserId)){
+                    return chat.getId();
+                }
             }
         }
         return 0L;
