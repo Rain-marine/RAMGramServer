@@ -1,6 +1,7 @@
 package models.requests;
 
 import controllers.ClientHandler;
+import controllers.Controllers;
 import models.responses.*;
 import models.trimmed.TrimmedChat;
 import models.trimmed.TrimmedMessage;
@@ -11,12 +12,13 @@ import org.hibernate.HibernateException;
 import javax.persistence.PersistenceException;
 
 @JsonTypeName("chat")
-public class ChatRequest implements Request {
+public class ChatRequest implements Request, Controllers {
 
     private String token;
     private long userId;
     private long chatId;
     private ChatType mode;
+    private String sender;
 
     public ChatRequest(String token, long userId, long chatId) {
         this.token = token;
@@ -33,8 +35,12 @@ public class ChatRequest implements Request {
             if (clientHandler.getToken().equals(token)) {
                 if (mode == ChatType.NORMAL)
                     return new ChatResponse(new TrimmedChat(chatId, userId));
-                else
-                    return new ChatResponse(new TrimmedChat(chatId, userId , ChatType.VIEW));
+                else {
+                    long mainId = CHAT_CONTROLLER.getMainId(chatId, userId, sender);
+                    if (mainId != 0)
+                        return new ChatResponse(new TrimmedChat(mainId, userId));
+                    return new AccessDeniedResponse();
+                }
             } else
                 return new BooleanResponse(false);
         } catch (PersistenceException dateBaseConnectionError) {
@@ -73,5 +79,13 @@ public class ChatRequest implements Request {
 
     public void setMode(ChatType mode) {
         this.mode = mode;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 }

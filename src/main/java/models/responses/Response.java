@@ -27,6 +27,7 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
         @JsonSubTypes.Type(value = UserResponse.class, name = "user"),
         @JsonSubTypes.Type(value = PermissionResponse.class, name = "permission"),
         @JsonSubTypes.Type(value = ConnectionErrorResponse.class, name = "error"),
+        @JsonSubTypes.Type(value = AccessDeniedResponse.class, name = "denied"),
 
 
 
