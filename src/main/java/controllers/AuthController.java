@@ -34,6 +34,7 @@ public class AuthController implements Repositories {
                 if (user.isActive()) {
                     log.info(username + " last seen updated: ");
                     USER_REPOSITORY.setLastSeen(user.getId(), new Date());
+                    CHAT_REPOSITORY.receiveMessages(user.getId());
                 }
                 return new ArrayList<>() {{
                     add(token);

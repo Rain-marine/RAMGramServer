@@ -26,6 +26,7 @@ public class ChatController implements Repositories {
     public void seeChat(long chatId , long loggedUserId) {
         log.info("the chat " + chatId + " was seen by :" + loggedUserId);
         CHAT_REPOSITORY.clearUnSeenCount(chatId, loggedUserId);
+
     }
 
     public void addMessageToChat(long chatId, String message, byte[] images , long loggedUserId) {

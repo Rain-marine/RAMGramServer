@@ -1,15 +1,13 @@
 package repository;
 
 import models.*;
+import models.types.MessageStatus;
 import repository.utils.EntityManagerProvider;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -92,7 +90,7 @@ public class ChatRepository {
     public void clearUnSeenCount(long chatId , long userId) {
         //set unseen count to 0
         // set hasSeen to true
-
+        seeMessages(chatId , userId);
         EntityManager em = EntityManagerProvider.getEntityManager();
         EntityTransaction et = null;
         try {
@@ -105,6 +103,56 @@ public class ChatRepository {
             userChat.setUnseenCount(0);
             userChat.setHasSeen(true);
             em.persist(chat);
+            et.commit();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            if (et != null) {
+                et.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
+
+    private void seeMessages(long chatId, long userId) {
+        EntityManager em = EntityManagerProvider.getEntityManager();
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Message> cq = cb.createQuery(Message.class);
+            Root<Message> root = cq.from(Message.class);
+
+            Join<Message, User> messageUserJoin = root.join("receiver");
+            cq.select(root);
+            Predicate receiver = cb.equal(messageUserJoin.get("id"), userId);
+
+            Join<Message, Chat> messageChatJoin = root.join("chat");
+            cq.select(root);
+            Predicate chat = cb.equal(messageChatJoin.get("id") ,chatId);
+
+            cq.where(cb.and(receiver,chat ));
+
+            TypedQuery<Message> typedQuery = em.createQuery(cq);
+            List<Message> messages = typedQuery.getResultList();
+
+            for (Message message : messages) {
+                changStatus(message.getId() , MessageStatus.SEEN);
+            }
+
+        } catch (NoResultException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void changStatus(long id, MessageStatus status) {
+        EntityManager em = EntityManagerProvider.getEntityManager();
+        EntityTransaction et = null;
+        try {
+            et = em.getTransaction();
+            et.begin();
+            Message message = em.find(Message.class, id);
+            message.setStatus(status);
+            em.persist(message);
             et.commit();
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -169,6 +217,32 @@ public class ChatRepository {
             e.printStackTrace();
         } finally {
             em.close();
+        }
+    }
+
+    public void receiveMessages(long id) {
+        EntityManager em = EntityManagerProvider.getEntityManager();
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Message> cq = cb.createQuery(Message.class);
+            Root<Message> root = cq.from(Message.class);
+
+            Join<Message, User> messageUserJoin = root.join("receiver");
+            cq.select(root);
+            Predicate receiver = cb.equal(messageUserJoin.get("id"), id);
+
+
+            cq.where(receiver);
+
+            TypedQuery<Message> typedQuery = em.createQuery(cq);
+            List<Message> messages = typedQuery.getResultList();
+
+            for (Message message : messages) {
+                changStatus(message.getId() , MessageStatus.RECEIVED);
+            }
+
+        } catch (NoResultException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -1,5 +1,8 @@
 package models;
 
+import models.types.MessageLink;
+import models.types.MessageStatus;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -43,6 +46,14 @@ public class Message {
     @JoinColumn(name = "chat_id")
     private Chat chat;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private MessageStatus status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "link")
+    private MessageLink link;
+
     public Message(String text, byte[] image, User sender) {
         this.date = new Date();
         this.text = text;
@@ -50,6 +61,8 @@ public class Message {
         this.sender = sender;
         this.grandSender = sender;
         this.isDeleted = false;
+        this.status = MessageStatus.SENT;
+        this.link = MessageLink.NONE;
     }
 
     public Message(String text, byte[] image, User sender, User receiver) {
@@ -132,5 +145,25 @@ public class Message {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public MessageStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MessageStatus status) {
+        this.status = status;
+    }
+
+    public MessageLink getLink() {
+        return link;
+    }
+
+    public void setLink(MessageLink link) {
+        this.link = link;
     }
 }

@@ -10,12 +10,12 @@ public class EntityManagerProvider {
 
     public static EntityManager getEntityManager() {
         long threadId = Thread.currentThread().getId();
-//        if (entityManagers.get(threadId) == null) {
-//            entityManagers.put(threadId, EntityManagerFactoryProvider.getEntityManagerFactory().createEntityManager());
-//        }
-//        if (!entityManagers.get(threadId).isOpen()) {
-//            entityManagers.put(threadId, EntityManagerFactoryProvider.getEntityManagerFactory().createEntityManager());
-//        }
+        if (entityManagers.get(threadId) == null) {
+            entityManagers.put(threadId, EntityManagerFactoryProvider.getEntityManagerFactory().createEntityManager());
+        }
+        if (!entityManagers.get(threadId).isOpen()) {
+            entityManagers.put(threadId, EntityManagerFactoryProvider.getEntityManagerFactory().createEntityManager());
+        }
         entityManagers.put(threadId, EntityManagerFactoryProvider.getEntityManagerFactory().createEntityManager());
         return entityManagers.get(threadId);
     }

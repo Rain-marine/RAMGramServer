@@ -3,8 +3,12 @@ package models.trimmed;
 import controllers.Controllers;
 import controllers.MessageController;
 import javafx.scene.control.Label;
+import models.Message;
+import models.types.MessageLink;
+import models.types.MessageStatus;
+import repository.Repositories;
 
-public class TrimmedMessage implements Controllers {
+public class TrimmedMessage implements Controllers, Repositories {
 
     private long messageId;
     private String messageText;
@@ -14,6 +18,8 @@ public class TrimmedMessage implements Controllers {
     private MessageController.TYPE type;
     private String sender;
     private String grandSender;
+    private MessageStatus status;
+    private MessageLink link;
 
     public TrimmedMessage() {
     }
@@ -27,7 +33,8 @@ public class TrimmedMessage implements Controllers {
         this.sender = MESSAGE_CONTROLLER.getMessageSender(messageId);
         this.grandSender = MESSAGE_CONTROLLER.getMessageGrandSender(messageId);
         this.type = MESSAGE_CONTROLLER.getMessageType(messageId , loggedUserId);
-
+        this.link = MESSAGE_REPOSITORY.getById(messageId).getLink();
+        this.status =MESSAGE_REPOSITORY.getById(messageId).getStatus();
     }
 
     public long getMessageId() {
@@ -92,6 +99,22 @@ public class TrimmedMessage implements Controllers {
 
     public void setGrandSender(String grandSender) {
         this.grandSender = grandSender;
+    }
+
+    public MessageStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MessageStatus status) {
+        this.status = status;
+    }
+
+    public MessageLink getLink() {
+        return link;
+    }
+
+    public void setLink(MessageLink link) {
+        this.link = link;
     }
 }
 
