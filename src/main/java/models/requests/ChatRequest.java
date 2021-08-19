@@ -4,17 +4,19 @@ import controllers.ClientHandler;
 import models.responses.*;
 import models.trimmed.TrimmedChat;
 import models.trimmed.TrimmedMessage;
+import models.types.ChatType;
 import org.codehaus.jackson.annotate.JsonTypeName;
 import org.hibernate.HibernateException;
 
 import javax.persistence.PersistenceException;
 
 @JsonTypeName("chat")
-public class ChatRequest implements Request{
+public class ChatRequest implements Request {
 
     private String token;
     private long userId;
     private long chatId;
+    private ChatType mode;
 
     public ChatRequest(String token, long userId, long chatId) {
         this.token = token;
@@ -27,13 +29,15 @@ public class ChatRequest implements Request{
 
     @Override
     public Response execute(ClientHandler clientHandler) {
-        try{
-        if(clientHandler.getToken().equals(token)){
-            return new ChatResponse(new TrimmedChat(chatId , userId));
-        }
-        else
-            return new BooleanResponse(false);
-        }catch (PersistenceException dateBaseConnectionError){
+        try {
+            if (clientHandler.getToken().equals(token)) {
+                if (mode == ChatType.NORMAL)
+                    return new ChatResponse(new TrimmedChat(chatId, userId));
+                else
+                    return new ChatResponse(new TrimmedChat(chatId, userId , ChatType.VIEW));
+            } else
+                return new BooleanResponse(false);
+        } catch (PersistenceException dateBaseConnectionError) {
             return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
         }
     }
@@ -61,5 +65,13 @@ public class ChatRequest implements Request{
 
     public void setChatId(long chatId) {
         this.chatId = chatId;
+    }
+
+    public ChatType getMode() {
+        return mode;
+    }
+
+    public void setMode(ChatType mode) {
+        this.mode = mode;
     }
 }

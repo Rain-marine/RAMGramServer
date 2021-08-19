@@ -1,6 +1,7 @@
 package models.trimmed;
 
 import controllers.Controllers;
+import models.types.ChatType;
 
 public class TrimmedChat implements Controllers {
 
@@ -11,6 +12,14 @@ public class TrimmedChat implements Controllers {
     private String unseenCount;
 
     public TrimmedChat() {
+    }
+
+    public TrimmedChat(long id , long loggedUserId , ChatType type) {
+        this.loggedUserId = loggedUserId;
+        this.id = id;
+        this.isGroup = CHAT_CONTROLLER.isGroup(id);
+        this.name= CHAT_CONTROLLER.getChatName(id , loggedUserId);
+        this.unseenCount = "0";
     }
 
     public TrimmedChat(long id , long loggedUserId) {

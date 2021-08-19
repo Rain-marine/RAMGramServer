@@ -116,11 +116,10 @@ public class ChatRepository {
             em.persist(chat);
             et.commit();
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            System.err.println(e.getMessage() + " user viewed a chat that doesn't belong to. 119 chat repository");
             if (et != null) {
                 et.rollback();
             }
-            e.printStackTrace();
         } finally {
             em.close();
         }
