@@ -3,11 +3,15 @@ package models.requests;
 import controllers.ClientHandler;
 import controllers.Controllers;
 import models.responses.BooleanResponse;
+import models.responses.ConnectionErrorResponse;
 import models.responses.LoggedUserResponse;
 import models.responses.Response;
 import models.trimmed.TrimmedLoggedUser;
 import models.types.ChangeInfoType;
 import org.codehaus.jackson.annotate.JsonTypeName;
+import org.hibernate.HibernateException;
+
+import javax.persistence.PersistenceException;
 
 @JsonTypeName("changeInfo")
 public class ChangeInfoRequest implements Request, Controllers {
@@ -30,6 +34,7 @@ public class ChangeInfoRequest implements Request, Controllers {
 
     @Override
     public Response execute(ClientHandler clientHandler) {
+        try{
         if(clientHandler.getToken().equals(token)){
             switch (type){
                 case LAST_SEEN -> {
@@ -60,6 +65,9 @@ public class ChangeInfoRequest implements Request, Controllers {
         }
         else
             return new BooleanResponse(false);
+        }catch (PersistenceException dateBaseConnectionError){
+            return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
+        }
     }
 
     public String getToken() {

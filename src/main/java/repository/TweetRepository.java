@@ -175,7 +175,6 @@ public class TweetRepository {
 
     public Tweet getById(long tweetId) {
         EntityManager em = EntityManagerProvider.getEntityManager();
-
         try {
             return em.find(Tweet.class, tweetId);
         } catch (Exception e) {
@@ -201,6 +200,7 @@ public class TweetRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         }
     }
 

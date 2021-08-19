@@ -3,10 +3,13 @@ package models.requests;
 import controllers.ClientHandler;
 import controllers.Controllers;
 import models.responses.BooleanResponse;
+import models.responses.ConnectionErrorResponse;
 import models.responses.Response;
 import models.types.MessageAccessType;
 import models.types.MessageActionType;
 import org.codehaus.jackson.annotate.JsonTypeName;
+
+import javax.persistence.PersistenceException;
 
 @JsonTypeName("messageAction")
 public class MessageActionRequest implements Request , Controllers {
@@ -35,6 +38,7 @@ public class MessageActionRequest implements Request , Controllers {
 
     @Override
     public Response execute(ClientHandler clientHandler) {
+        try{
         if(clientHandler.getToken().equals(token)){
             switch (type){
                 case DELETE -> MESSAGE_CONTROLLER.deleteMessage(messageId);
@@ -44,6 +48,9 @@ public class MessageActionRequest implements Request , Controllers {
         }
         else
             return new BooleanResponse(false);
+        }catch (PersistenceException dateBaseConnectionError){
+            return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
+        }
     }
 
     public MessageActionRequest() {

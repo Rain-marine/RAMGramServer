@@ -4,9 +4,12 @@ import controllers.ClientHandler;
 import controllers.Controllers;
 import controllers.UserController;
 import models.responses.BooleanResponse;
+import models.responses.ConnectionErrorResponse;
 import models.responses.ExploreResponse;
 import models.responses.Response;
 import org.codehaus.jackson.annotate.JsonTypeName;
+
+import javax.persistence.PersistenceException;
 
 @JsonTypeName("explore")
 public class ExploreRequest implements Request, Controllers {
@@ -18,11 +21,15 @@ public class ExploreRequest implements Request, Controllers {
 
     @Override
     public Response execute(ClientHandler clientHandler) {
+        try{
         if(clientHandler.getToken().equals(token)){
             return new ExploreResponse(USER_CONTROLLER.getUserByUsername(usernameToFind));
         }
         else
             return new BooleanResponse(false);
+        }catch (PersistenceException dateBaseConnectionError){
+            return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
+        }
     }
 
     public ExploreRequest() {

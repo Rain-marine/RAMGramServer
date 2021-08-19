@@ -3,9 +3,12 @@ package models.requests;
 import controllers.ClientHandler;
 import controllers.Controllers;
 import models.responses.BooleanResponse;
+import models.responses.ConnectionErrorResponse;
 import models.responses.Response;
 import models.types.TweetActionType;
 import org.codehaus.jackson.annotate.JsonTypeName;
+
+import javax.persistence.PersistenceException;
 
 @JsonTypeName("tweetAction")
 public class TweetActionRequest implements Request, Controllers {
@@ -28,6 +31,7 @@ public class TweetActionRequest implements Request, Controllers {
 
     @Override
     public Response execute(ClientHandler clientHandler) {
+        try{
         if(clientHandler.getToken().equals(token)){
             switch (action){
                 case LIKE -> TWEET_CONTROLLER.like(tweetId , userId);
@@ -42,6 +46,9 @@ public class TweetActionRequest implements Request, Controllers {
 
         else
             return new BooleanResponse(false);
+        }catch (PersistenceException dateBaseConnectionError){
+            return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
+        }
     }
 
     public String getToken() {

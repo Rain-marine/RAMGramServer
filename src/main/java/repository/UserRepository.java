@@ -99,6 +99,7 @@ public class UserRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         }
     }
 

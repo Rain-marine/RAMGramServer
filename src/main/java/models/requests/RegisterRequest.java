@@ -3,9 +3,12 @@ package models.requests;
 import controllers.ClientHandler;
 import controllers.Controllers;
 import models.responses.BooleanResponse;
+import models.responses.ConnectionErrorResponse;
 import models.responses.Response;
 import models.types.RegisterType;
 import org.codehaus.jackson.annotate.JsonTypeName;
+
+import javax.persistence.PersistenceException;
 
 @JsonTypeName("register")
 public class RegisterRequest implements Request, Controllers {
@@ -22,6 +25,7 @@ public class RegisterRequest implements Request, Controllers {
 
     @Override
     public Response execute(ClientHandler clientHandler) {
+        try{
         switch (type){
             case USERNAME -> {return new BooleanResponse(REGISTER_MANAGER.isUsernameAvailable(infoCheck));}
             case NUMBER -> {return new BooleanResponse(REGISTER_MANAGER.isPhoneNumberAvailable(infoCheck));}
@@ -29,6 +33,9 @@ public class RegisterRequest implements Request, Controllers {
             case INSERT -> REGISTER_MANAGER.makeNewUser(finalInfo);
         }
         return new BooleanResponse(true);
+        }catch (PersistenceException dateBaseConnectionError){
+            return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
+        }
     }
 
     public RegisterRequest() {

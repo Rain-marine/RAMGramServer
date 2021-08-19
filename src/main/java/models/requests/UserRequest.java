@@ -2,10 +2,13 @@ package models.requests;
 
 import controllers.ClientHandler;
 import models.responses.BooleanResponse;
+import models.responses.ConnectionErrorResponse;
 import models.responses.Response;
 import models.responses.UserResponse;
 import models.trimmed.TrimmedUser;
 import org.codehaus.jackson.annotate.JsonTypeName;
+
+import javax.persistence.PersistenceException;
 
 @JsonTypeName("user")
 public class UserRequest implements Request{
@@ -22,10 +25,14 @@ public class UserRequest implements Request{
 
     @Override
     public Response execute(ClientHandler clientHandler) {
+        try{
         if (clientHandler.getToken().equals(token)) {
             return new UserResponse(new TrimmedUser(otherUserId , userId));
         } else
             return new BooleanResponse(false);
+        }catch (PersistenceException dateBaseConnectionError){
+            return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
+        }
     }
 
     public UserRequest() {

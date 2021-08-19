@@ -1,13 +1,12 @@
 package models.requests;
 
 import controllers.ClientHandler;
-import models.responses.BooleanResponse;
-import models.responses.MessageResponse;
-import models.responses.Response;
-import models.responses.TweetResponse;
+import models.responses.*;
 import models.trimmed.TrimmedMessage;
 import models.trimmed.TrimmedTweet;
 import org.codehaus.jackson.annotate.JsonTypeName;
+
+import javax.persistence.PersistenceException;
 
 @JsonTypeName("message")
 public class MessageRequest implements Request{
@@ -27,11 +26,15 @@ public class MessageRequest implements Request{
 
     @Override
     public Response execute(ClientHandler clientHandler) {
+        try{
         if(clientHandler.getToken().equals(token)){
             return new MessageResponse(new TrimmedMessage(messageId , userId));
         }
         else
             return new BooleanResponse(false);
+        }catch (PersistenceException dateBaseConnectionError){
+            return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
+        }
     }
 
 

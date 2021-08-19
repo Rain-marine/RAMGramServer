@@ -3,8 +3,12 @@ package models.requests;
 import controllers.ClientHandler;
 import models.responses.BooleanResponse;
 import models.responses.ChatInfoResponse;
+import models.responses.ConnectionErrorResponse;
 import models.responses.Response;
 import org.codehaus.jackson.annotate.JsonTypeName;
+import org.hibernate.HibernateException;
+
+import javax.persistence.PersistenceException;
 
 @JsonTypeName("chatInfo")
 public class ChatInfoRequest implements Request {
@@ -24,11 +28,15 @@ public class ChatInfoRequest implements Request {
 
     @Override
     public Response execute(ClientHandler clientHandler) {
+        try{
         if(clientHandler.getToken().equals(token)){
             return new ChatInfoResponse(chatId , userId);
         }
         else
             return new BooleanResponse(false);
+        }catch (PersistenceException dateBaseConnectionError){
+            return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
+        }
     }
 
     public long getChatId() {

@@ -1,13 +1,13 @@
 package models.requests;
 
 import controllers.ClientHandler;
-import models.responses.BooleanResponse;
-import models.responses.ChatResponse;
-import models.responses.MessageResponse;
-import models.responses.Response;
+import models.responses.*;
 import models.trimmed.TrimmedChat;
 import models.trimmed.TrimmedMessage;
 import org.codehaus.jackson.annotate.JsonTypeName;
+import org.hibernate.HibernateException;
+
+import javax.persistence.PersistenceException;
 
 @JsonTypeName("chat")
 public class ChatRequest implements Request{
@@ -27,11 +27,15 @@ public class ChatRequest implements Request{
 
     @Override
     public Response execute(ClientHandler clientHandler) {
+        try{
         if(clientHandler.getToken().equals(token)){
             return new ChatResponse(new TrimmedChat(chatId , userId));
         }
         else
             return new BooleanResponse(false);
+        }catch (PersistenceException dateBaseConnectionError){
+            return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
+        }
     }
 
 

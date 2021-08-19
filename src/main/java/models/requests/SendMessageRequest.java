@@ -3,11 +3,13 @@ package models.requests;
 import controllers.ClientHandler;
 import controllers.Controllers;
 import models.responses.BooleanResponse;
+import models.responses.ConnectionErrorResponse;
 import models.responses.ExploreResponse;
 import models.responses.Response;
 import models.types.SendMessageType;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
+import javax.persistence.PersistenceException;
 import java.util.List;
 
 @JsonTypeName("sendMessage")
@@ -37,6 +39,7 @@ public class SendMessageRequest implements Request, Controllers {
 
     @Override
     public Response execute(ClientHandler clientHandler) {
+        try{
         if (clientHandler.getToken().equals(token)) {
             switch (type) {
                 case SEND -> MESSAGE_CONTROLLER.sendMessage(content,contentImage ,users ,factions , userId);
@@ -51,6 +54,9 @@ public class SendMessageRequest implements Request, Controllers {
             return new BooleanResponse(true);
         } else
             return new BooleanResponse(false);
+        }catch (PersistenceException dateBaseConnectionError){
+            return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
+        }
     }
 
     public SendMessageRequest() {

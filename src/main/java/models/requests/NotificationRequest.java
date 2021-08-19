@@ -3,13 +3,11 @@ package models.requests;
 import controllers.ClientHandler;
 import controllers.Controllers;
 import models.Notification;
-import models.responses.BooleanResponse;
-import models.responses.NotificationResponse;
-import models.responses.Response;
-import models.responses.TweetResponse;
+import models.responses.*;
 import models.trimmed.TrimmedTweet;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
+import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,25 +31,28 @@ public class NotificationRequest implements Request , Controllers {
 
     @Override
     public Response execute(ClientHandler clientHandler) {
-        if(clientHandler.getToken().equals(token)){
-            List<Notification> notifications = new ArrayList<>();
-            switch (type){
-                case SYSTEM -> {
-                    return new NotificationResponse(NOTIFICATION_CONTROLLER.getSystemNotification(userId));
+        try {
+            if (clientHandler.getToken().equals(token)) {
+                List<Notification> notifications = new ArrayList<>();
+                switch (type) {
+                    case SYSTEM -> {
+                        return new NotificationResponse(NOTIFICATION_CONTROLLER.getSystemNotification(userId));
+                    }
+                    case REQUESTS -> {
+                        return new NotificationResponse(NOTIFICATION_CONTROLLER.getYourFollowingRequestNotification(userId));
+                    }
+                    case REQ_TO_ME -> {
+                        return new NotificationResponse(NOTIFICATION_CONTROLLER.getFollowingRequestsNotifications(userId));
+                    }
+                    default -> {
+                        return new BooleanResponse(true);
+                    }
                 }
-                case REQUESTS -> {
-                    return new NotificationResponse(NOTIFICATION_CONTROLLER.getYourFollowingRequestNotification(userId));
-                }
-                case REQ_TO_ME -> {
-                    return new NotificationResponse(NOTIFICATION_CONTROLLER.getFollowingRequestsNotifications(userId));
-                }
-                default -> {
-                    return new BooleanResponse(true);
-                }
+            } else
+                return new BooleanResponse(false);
+        }catch (PersistenceException dateBaseConnectionError){
+                return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
             }
-        }
-        else
-            return new BooleanResponse(false);
     }
 
     public String getToken() {

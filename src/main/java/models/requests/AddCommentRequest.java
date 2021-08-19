@@ -3,8 +3,12 @@ package models.requests;
 import controllers.ClientHandler;
 import controllers.Controllers;
 import models.responses.BooleanResponse;
+import models.responses.ConnectionErrorResponse;
 import models.responses.Response;
 import org.codehaus.jackson.annotate.JsonTypeName;
+import org.hibernate.HibernateException;
+
+import javax.persistence.PersistenceException;
 
 @JsonTypeName("addComment")
 public class AddCommentRequest implements Request, Controllers {
@@ -25,12 +29,15 @@ public class AddCommentRequest implements Request, Controllers {
 
     @Override
     public Response execute(ClientHandler clientHandler) {
-        if(clientHandler.getToken().equals(token)){
-           TWEET_CONTROLLER.addComment(commentText , commentImage , tweetId , userId);
-            return new BooleanResponse(true);
+        try {
+            if (clientHandler.getToken().equals(token)) {
+                TWEET_CONTROLLER.addComment(commentText, commentImage, tweetId, userId);
+                return new BooleanResponse(true);
+            } else
+                return new BooleanResponse(false);
+        }catch (PersistenceException dateBaseConnectionError){
+            return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
         }
-        else
-            return new BooleanResponse(false);
     }
 
     public AddCommentRequest() {

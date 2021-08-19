@@ -3,9 +3,13 @@ package models.requests;
 import controllers.ClientHandler;
 import controllers.Controllers;
 import models.responses.BooleanResponse;
+import models.responses.ConnectionErrorResponse;
 import models.responses.Response;
 import models.types.AddContentType;
 import org.codehaus.jackson.annotate.JsonTypeName;
+import org.hibernate.HibernateException;
+
+import javax.persistence.PersistenceException;
 
 @JsonTypeName("addContent")
 public class AddContentRequest implements Request , Controllers {
@@ -32,6 +36,7 @@ public class AddContentRequest implements Request , Controllers {
 
     @Override
     public Response execute(ClientHandler clientHandler) {
+        try{
         if(clientHandler.getToken().equals(token)){
             switch (type){
                 case TWEET -> TWEET_CONTROLLER.addTweet(text , image , userId);
@@ -45,6 +50,9 @@ public class AddContentRequest implements Request , Controllers {
         }
         else
             return new BooleanResponse(false);
+        }catch (PersistenceException dateBaseConnectionError){
+            return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
+        }
     }
 
     public AddContentRequest() {

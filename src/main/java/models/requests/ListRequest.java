@@ -2,13 +2,12 @@ package models.requests;
 
 import controllers.ClientHandler;
 import controllers.Controllers;
-import models.responses.BooleanResponse;
-import models.responses.FactionResponse;
-import models.responses.ListResponse;
-import models.responses.Response;
+import models.responses.*;
 import models.types.ListType;
 import org.codehaus.jackson.annotate.JsonTypeName;
 import repository.FactionRepository;
+
+import javax.persistence.PersistenceException;
 
 @JsonTypeName("list")
 public class ListRequest implements Request, Controllers {
@@ -30,6 +29,7 @@ public class ListRequest implements Request, Controllers {
 
     @Override
     public Response execute(ClientHandler clientHandler) {
+        try{
         if (clientHandler.getToken().equals(token)) {
             switch (type) {
                 case TIMELINE -> {
@@ -75,6 +75,9 @@ public class ListRequest implements Request, Controllers {
             }
         } else
             return new BooleanResponse(false);
+        }catch (PersistenceException dateBaseConnectionError){
+            return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
+        }
     }
 
     public String getToken() {

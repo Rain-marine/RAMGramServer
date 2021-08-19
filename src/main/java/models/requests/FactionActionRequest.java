@@ -3,10 +3,12 @@ package models.requests;
 import controllers.ClientHandler;
 import controllers.Controllers;
 import models.responses.BooleanResponse;
+import models.responses.ConnectionErrorResponse;
 import models.responses.Response;
 import models.types.FactionActionType;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
+import javax.persistence.PersistenceException;
 import java.util.List;
 
 @JsonTypeName("factionAction")
@@ -33,6 +35,7 @@ public class FactionActionRequest implements Request, Controllers {
 
     @Override
     public Response execute(ClientHandler clientHandler) {
+        try {
         if (clientHandler.getToken().equals(token)) {
             switch (type) {
                 case ADD_MEMBER -> FACTIONS_CONTROLLER.addUserToFaction(factionId, name);
@@ -43,6 +46,9 @@ public class FactionActionRequest implements Request, Controllers {
             return new BooleanResponse(false);
         } else
             return new BooleanResponse(false);
+        }catch (PersistenceException dateBaseConnectionError){
+            return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
+        }
     }
 
     public FactionActionRequest() {

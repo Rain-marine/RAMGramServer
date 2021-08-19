@@ -3,11 +3,14 @@ package models.requests;
 import controllers.ClientHandler;
 import controllers.Controllers;
 import models.responses.BooleanResponse;
+import models.responses.ConnectionErrorResponse;
 import models.responses.LoggedUserResponse;
 import models.responses.Response;
 import models.trimmed.TrimmedLoggedUser;
 import org.codehaus.jackson.annotate.JsonTypeName;
+import org.hibernate.HibernateException;
 
+import javax.persistence.PersistenceException;
 import java.util.Date;
 
 @JsonTypeName("changeBirthday")
@@ -28,12 +31,16 @@ public class ChangeBirthdayRequest implements Request, Controllers {
 
     @Override
     public Response execute(ClientHandler clientHandler) {
+        try{
         if(clientHandler.getToken().equals(token)){
             USER_CONTROLLER.changeBirthday(newBirthday , userId);
             return new LoggedUserResponse(new TrimmedLoggedUser(userId));
         }
         else
             return new BooleanResponse(false);
+        }catch (PersistenceException dateBaseConnectionError){
+            return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
+        }
     }
 
     public String getToken() {

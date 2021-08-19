@@ -3,8 +3,12 @@ package models.requests;
 import controllers.ClientHandler;
 import controllers.Controllers;
 import models.responses.BooleanResponse;
+import models.responses.ConnectionErrorResponse;
 import models.responses.Response;
 import org.codehaus.jackson.annotate.JsonTypeName;
+import org.hibernate.HibernateException;
+
+import javax.persistence.PersistenceException;
 
 
 @JsonTypeName("deleteAccount")
@@ -23,6 +27,7 @@ public class DeleteAccountRequest implements Request, Controllers {
 
     @Override
     public Response execute(ClientHandler clientHandler) {
+        try{
         if (clientHandler.getToken().equals(token)){
             SETTING_CONTROLLER.deleteAccount(userId);
             clientHandler.setLoggedUserId(0L);
@@ -30,6 +35,9 @@ public class DeleteAccountRequest implements Request, Controllers {
         }
         else
             return new BooleanResponse(false);
+        }catch (PersistenceException dateBaseConnectionError){
+            return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
+        }
     }
 
     public String getToken() {

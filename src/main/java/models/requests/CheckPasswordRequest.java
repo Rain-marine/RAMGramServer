@@ -3,8 +3,12 @@ package models.requests;
 import controllers.ClientHandler;
 import controllers.Controllers;
 import models.responses.BooleanResponse;
+import models.responses.ConnectionErrorResponse;
 import models.responses.Response;
 import org.codehaus.jackson.annotate.JsonTypeName;
+import org.hibernate.HibernateException;
+
+import javax.persistence.PersistenceException;
 
 
 @JsonTypeName("checkPass")
@@ -25,12 +29,16 @@ public class CheckPasswordRequest implements Request, Controllers {
 
     @Override
     public Response execute(ClientHandler clientHandler) {
+        try{
         if(clientHandler.getToken().equals(token)){
             return new BooleanResponse(SETTING_CONTROLLER.isPasswordCorrect(password , userId));
         }
         else {
             System.out.println("wrong token");
             return new BooleanResponse(false);
+        }
+        }catch (PersistenceException dateBaseConnectionError){
+            return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
         }
     }
 

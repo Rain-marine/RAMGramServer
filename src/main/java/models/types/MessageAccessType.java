@@ -1,4 +1,5 @@
 package models.types;
 
-public enum MessageAccessType {USER, GROUP , FACTION
+public enum MessageAccessType {
+    USER, GROUP, FACTION
 }

@@ -3,8 +3,11 @@ package models.requests;
 import controllers.ClientHandler;
 import controllers.Controllers;
 import models.responses.BooleanResponse;
+import models.responses.ConnectionErrorResponse;
 import models.responses.Response;
 import org.codehaus.jackson.annotate.JsonTypeName;
+
+import javax.persistence.PersistenceException;
 
 @JsonTypeName("leaveGroup")
 public class LeaveGroupRequest implements Request, Controllers {
@@ -21,11 +24,15 @@ public class LeaveGroupRequest implements Request, Controllers {
 
     @Override
     public Response execute(ClientHandler clientHandler) {
+        try{
         if (clientHandler.getToken().equals(token)) {
             CHAT_CONTROLLER.leaveGroup(groupId, userId);
             return new BooleanResponse(true);
         } else
             return new BooleanResponse(false);
+        }catch (PersistenceException dateBaseConnectionError){
+            return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
+        }
     }
 
     public LeaveGroupRequest() {

@@ -1,6 +1,7 @@
 package controllers;
 
 import models.requests.Request;
+import models.responses.ConnectionErrorResponse;
 import models.responses.Response;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -43,6 +44,11 @@ public class ClientHandler extends Thread{
                 printWriter.println(objectMapper.writeValueAsString(response));
             } catch (IOException e) {
                 e.printStackTrace();
+                try {
+                    printWriter.println(objectMapper.writeValueAsString(new ConnectionErrorResponse(e.getMessage())));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
         }
         scanner.close();

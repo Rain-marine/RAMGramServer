@@ -3,10 +3,13 @@ package models.requests;
 import controllers.ClientHandler;
 import controllers.Controllers;
 import models.responses.BooleanResponse;
+import models.responses.ConnectionErrorResponse;
 import models.responses.ExploreResponse;
 import models.responses.Response;
 import models.types.MessageAccessType;
 import org.codehaus.jackson.annotate.JsonTypeName;
+
+import javax.persistence.PersistenceException;
 
 @JsonTypeName("messageAccess")
 public class MessageAccessRequest implements Request, Controllers {
@@ -26,6 +29,7 @@ public class MessageAccessRequest implements Request, Controllers {
 
     @Override
     public Response execute(ClientHandler clientHandler) {
+        try{
         if (clientHandler.getToken().equals(token)) {
             switch (type) {
                 case USER -> {
@@ -43,6 +47,9 @@ public class MessageAccessRequest implements Request, Controllers {
             }
         } else
             return new BooleanResponse(false);
+        }catch (PersistenceException dateBaseConnectionError){
+            return new ConnectionErrorResponse(dateBaseConnectionError.getMessage());
+        }
     }
 
     public MessageAccessRequest() {
@@ -70,5 +77,13 @@ public class MessageAccessRequest implements Request, Controllers {
 
     public void setTargetUsername(String targetUsername) {
         this.targetUsername = targetUsername;
+    }
+
+    public MessageAccessType getType() {
+        return type;
+    }
+
+    public void setType(MessageAccessType type) {
+        this.type = type;
     }
 }
