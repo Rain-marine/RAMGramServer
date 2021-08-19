@@ -5,9 +5,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import repository.Repositories;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ChatController implements Repositories {
@@ -46,10 +44,9 @@ public class ChatController implements Repositories {
 
     private User getFrontUser(long chatId , long loggedUserId) {
         Chat chat = CHAT_REPOSITORY.getById(chatId);
-        User frontUser = chat.getUserChats().get(0).getUser().getId() == loggedUserId
+        return chat.getUserChats().get(0).getUser().getId() == loggedUserId
                 ? chat.getUserChats().get(1).getUser()
                 : chat.getUserChats().get(0).getUser();
-        return frontUser;
     }
 
     public ArrayList<Long> getMessages(long chatID) {
@@ -73,7 +70,7 @@ public class ChatController implements Repositories {
 
     public void addMemberToGroupChat(String member, long chatId) {
         Chat chat = CHAT_REPOSITORY.getById(chatId);
-        if (!chat.getUserChats().stream().anyMatch(it -> it.getUser().getUsername().equals(member)))
+        if (chat.getUserChats().stream().noneMatch(it -> it.getUser().getUsername().equals(member)))
             CHAT_REPOSITORY.addMemberToGroupChat(chatId, new UserChat(USER_REPOSITORY.getByUsername(member), chat));
     }
 
@@ -114,5 +111,18 @@ public class ChatController implements Repositories {
 
     public void leaveGroup(long groupId , long loggedUserId) {
         CHAT_REPOSITORY.leaveGroup(loggedUserId , groupId);
+    }
+
+    public void addScheduledMessage(String message, byte[] image, long chatId, long loggedUserId, long time) {
+        Timer timer = new Timer("MessageTimer");
+        TimerTask task = new TimerTask() {
+            public void run() {
+                System.out.println("inserting scheduled Message...");
+                Message newMessage = new Message(message, image, USER_REPOSITORY.getById(loggedUserId));
+                CHAT_REPOSITORY.addMessageToChat(chatId, newMessage);
+            }
+        };
+        time*=1000;
+        timer.schedule(task, time);
     }
 }

@@ -39,6 +39,7 @@ public class AddContentRequest implements Request , Controllers {
                 case SAVE_MESSAGE -> MESSAGE_CONTROLLER.insertSavedMessage(selfId , userId);
                 case NEW_SAVED_MESSAGE -> MESSAGE_CONTROLLER.addSavedMessage(text , image , userId);
                 case GROUP_MESSAGE -> CHAT_CONTROLLER.addNewMessageToGroupChat(text , image , superId , userId);
+                case SCHEDULED -> CHAT_CONTROLLER.addScheduledMessage(text , image , superId , userId , selfId);
             }
             return new BooleanResponse(true);
         }
