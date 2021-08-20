@@ -24,6 +24,7 @@ public class MessageRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -45,6 +46,7 @@ public class MessageRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -89,6 +91,7 @@ public class MessageRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }

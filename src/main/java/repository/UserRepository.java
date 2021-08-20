@@ -39,12 +39,13 @@ public class UserRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
     }
 
-    public void save(User user){
+    public synchronized void save(User user){
         EntityManager em = EntityManagerProvider.getEntityManager();
         EntityTransaction et = null;
         try {
@@ -79,6 +80,7 @@ public class UserRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -120,6 +122,7 @@ public class UserRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -162,6 +165,7 @@ public class UserRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -183,6 +187,7 @@ public class UserRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -204,6 +209,7 @@ public class UserRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -225,6 +231,7 @@ public class UserRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -246,6 +253,7 @@ public class UserRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -316,6 +324,7 @@ public class UserRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -339,6 +348,7 @@ public class UserRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -361,6 +371,7 @@ public class UserRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -403,6 +414,7 @@ public class UserRepository {
                 et.rollback();
             }
             e.printStackTrace();
+
         } finally {
             em.close();
         }
@@ -505,6 +517,7 @@ public class UserRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }

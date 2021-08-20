@@ -31,11 +31,22 @@ public class ChatController implements Repositories {
 
     public void addMessageToChat(long chatId, String message, byte[] images, long loggedUserId) {
         long frontUserId = getFrontUserId(chatId, loggedUserId);
-        Message newMessage = new Message(message, images,
-                USER_REPOSITORY.getById(loggedUserId),
-                USER_REPOSITORY.getById(frontUserId));
-        CHAT_REPOSITORY.addMessageToChat(chatId, newMessage);
-        log.info(loggedUserId + " sent message to " + chatId);
+        if (!hasReceiverBlocked(loggedUserId, frontUserId)) {
+            Message newMessage = new Message(message, images,
+                    USER_REPOSITORY.getById(loggedUserId),
+                    USER_REPOSITORY.getById(frontUserId));
+            CHAT_REPOSITORY.addMessageToChat(chatId, newMessage);
+            log.info(loggedUserId + " sent message to " + chatId);
+        }
+    }
+
+    private boolean hasReceiverBlocked(long loggedUserId, long frontUserId) {
+        List<User> blocked = USER_REPOSITORY.getById(frontUserId).getBlackList();
+        for (User user : blocked) {
+            if(user.getId() == loggedUserId)
+                return true;
+        }
+        return false;
     }
 
     public long getFrontUserId(long chatId, long loggedUserId) {
@@ -131,17 +142,16 @@ public class ChatController implements Repositories {
         Chat currentChat = CHAT_REPOSITORY.getById(middleAndMainUserChat);
         long mainUserId = currentChat.getUserChats().stream().filter(it -> !it.getUser().getUsername().equals(middleUser)).findAny().orElseThrow().getUser().getId();
         List<Chat> chats;
-        if(currentChat.isGroup()){
+        if (currentChat.isGroup()) {
             chats = CHAT_REPOSITORY.getAllChats(loggedUserId).stream().filter(Chat::isGroup).collect(Collectors.toList());
             for (Chat chat : chats) {
                 if (chat.getName().equals(currentChat.getName()))
                     return chat.getId();
             }
-        }
-        else {
+        } else {
             chats = CHAT_REPOSITORY.getAllChats(loggedUserId).stream().filter(it -> it.getUserChats().size() == 2).collect(Collectors.toList());
             for (Chat chat : chats) {
-                if(chat.getUserChats().stream().anyMatch(it -> it.getUser().getId() == mainUserId)){
+                if (chat.getUserChats().stream().anyMatch(it -> it.getUser().getId() == mainUserId)) {
                     return chat.getId();
                 }
             }

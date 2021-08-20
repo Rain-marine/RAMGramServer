@@ -67,6 +67,7 @@ public class ChatRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -93,6 +94,7 @@ public class ChatRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -151,6 +153,7 @@ public class ChatRepository {
 
         } catch (NoResultException e) {
             e.printStackTrace();
+            throw e;
         }
     }
 
@@ -170,6 +173,7 @@ public class ChatRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -201,6 +205,7 @@ public class ChatRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -225,6 +230,7 @@ public class ChatRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -253,6 +259,7 @@ public class ChatRepository {
 
         } catch (NoResultException e) {
             e.printStackTrace();
+            throw e;
         }
     }
 

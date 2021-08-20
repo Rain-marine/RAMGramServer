@@ -1,5 +1,6 @@
 package controllers;
 
+import models.Chat;
 import models.Group;
 import models.User;
 import org.apache.log4j.LogManager;

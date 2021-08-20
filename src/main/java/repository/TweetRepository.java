@@ -28,6 +28,7 @@ public class TweetRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -49,6 +50,7 @@ public class TweetRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -147,6 +149,7 @@ public class TweetRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -223,6 +226,7 @@ public class TweetRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         }
     }
 }

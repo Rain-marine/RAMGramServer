@@ -25,6 +25,7 @@ public class FactionRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -48,6 +49,7 @@ public class FactionRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -71,6 +73,7 @@ public class FactionRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -78,7 +81,6 @@ public class FactionRepository {
 
     public Group getFactionById(int id) {
         EntityManager em = EntityManagerProvider.getEntityManager();
-
         try {
             return em.find(Group.class, id);
         } catch (Exception e) {
@@ -105,6 +107,7 @@ public class FactionRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         }
     }
 
@@ -127,6 +130,7 @@ public class FactionRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
@@ -151,6 +155,7 @@ public class FactionRepository {
                 et.rollback();
             }
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
