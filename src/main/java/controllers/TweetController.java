@@ -66,7 +66,7 @@ public class TweetController implements Repositories {
 
         for (User user : following) {
             if (muted.stream().noneMatch(it -> it.getId() == user.getId())) {
-                followingTweets.addAll(getAllTweetsModel(user));
+                followingTweets.addAll(getAllTweetsModel(user.getId()));
             }
         }
         List<Tweet> finalTweetList = followingTweets.stream().sorted(Comparator.comparing(Tweet::getTweetDateTime).reversed()).
@@ -78,8 +78,8 @@ public class TweetController implements Repositories {
         return finalTweetsIDs;
     }
 
-    private List<Tweet> getAllTweetsModel(User rawUser) {
-        User user = USER_REPOSITORY.getByUsername(rawUser.getUsername());
+    private List<Tweet> getAllTweetsModel(long userId) {
+        User user = USER_REPOSITORY.getById(userId);
         List<Tweet> userAllTweets = TWEET_REPOSITORY.getAllTweets(user.getId());
         userAllTweets.addAll(user.getRetweetTweets());
         return userAllTweets.stream().sorted(Comparator.comparing(Tweet::getTweetDateTime)).

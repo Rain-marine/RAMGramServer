@@ -81,7 +81,7 @@ public class TweetRepository {
         }
     }
 
-    public List<Tweet> getAllTweets(long userId) {
+    public synchronized List<Tweet> getAllTweets(long userId) {
         //tweets which: 1- tweet's user is userId  2- are in users retweet list
         // order all by date desc // tweet where their parentTweet is null
         // 2 is wrong
