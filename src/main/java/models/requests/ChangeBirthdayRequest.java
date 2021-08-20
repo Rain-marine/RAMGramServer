@@ -34,7 +34,7 @@ public class ChangeBirthdayRequest implements Request, Controllers {
         try{
         if(clientHandler.getToken().equals(token)){
             USER_CONTROLLER.changeBirthday(newBirthday , userId);
-            return new LoggedUserResponse(new TrimmedLoggedUser(userId));
+            return new BooleanResponse(true);
         }
         else
             return new BooleanResponse(false);
