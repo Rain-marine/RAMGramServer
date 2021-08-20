@@ -16,7 +16,7 @@ public class EntityManagerProvider {
         if (!entityManagers.get(threadId).isOpen()) {
             entityManagers.put(threadId, EntityManagerFactoryProvider.getEntityManagerFactory().createEntityManager());
         }
-        entityManagers.put(threadId, EntityManagerFactoryProvider.getEntityManagerFactory().createEntityManager());
+//        entityManagers.put(threadId, EntityManagerFactoryProvider.getEntityManagerFactory().createEntityManager());
         return entityManagers.get(threadId);
     }
 
